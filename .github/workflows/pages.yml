@@ -26,3 +26,27 @@ jobs:
       - name: Deploy dashboard
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Verify published page and data
+        env:
+          ATLAS_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          python - <<'PY'
+          import json, os, time, urllib.request
+          base = os.environ['ATLAS_URL'].rstrip('/') + '/'
+          for attempt in range(6):
+              try:
+                  with urllib.request.urlopen(base, timeout=20) as response:
+                      assert b'HealthValue Atlas' in response.read()
+                  with urllib.request.urlopen(base + 'data/atlas.json', timeout=20) as response:
+                      data = json.load(response)
+                  with urllib.request.urlopen(base + 'data/world.json', timeout=20) as response:
+                      boundaries = json.load(response)
+                  assert data['quality']['countries'] == 46
+                  assert len(boundaries) == 176
+                  print('Published page and both datasets: OK')
+                  break
+              except Exception:
+                  if attempt == 5:
+                      raise
+                  time.sleep(5)
+          PY

@@ -4,7 +4,8 @@ const state = {
   year: 2023,
   country: "POL",
   metric: "treatable",
-  view: "overview"
+  view: "overview",
+  chart: "scatter"
 };
 const colors = {
   teal: "#287f7e",
@@ -18,6 +19,7 @@ const names = {
   avoidable: "Вся предотвратимая смертность"
 };
 let atlas;
+let world;
 const fmt = (v, digits = 0) => v == null || !Number.isFinite(Number(v)) ? "Нет данных" : Number(v).toLocaleString("ru-RU", {
   maximumFractionDigits: digits,
   minimumFractionDigits: digits
@@ -87,7 +89,13 @@ function renderOverview() {
   const gap = r?.[state.metric] != null && medRate ? (r[state.metric] / medRate - 1) * 100 : null;
   $("kpis").innerHTML = kpi("Страны в сравнении", `${rows.length}<small> / ${atlas.quality.countries}</small>`, `${state.year} год · есть оба показателя`) + kpi("Медианные расходы", fmt(medSpend), "На человека · текущие цены", "$ ППС") + kpi("Медианная смертность", fmt(medRate, 1), "Стандартизация по возрасту", "/ 100 тыс.") + kpi("Страна к медиане смертности", gap == null ? "Нет данных" : `${gap>0?"+":""}${fmt(gap,1)}%`, esc(r.country));
   $("scatter-year").textContent = state.year;
-  renderScatter(rows);
+  $("map-label").hidden = state.chart !== "map";
+  if (state.chart === "map") renderMap();
+  else {
+    $("scatter-caption").textContent = "Каждая точка - страна. Нажмите на точку, чтобы открыть её профиль.";
+    $("scatter-legend").innerHTML = '<span><b class="legend-dot teal"></b>Выборка</span><span><b class="legend-dot orange"></b>Выбранная страна</span><span>Текущие $ по ППС · логарифмическая шкала</span>';
+    renderScatter(rows);
+  }
   $("profile-name").textContent = r.country;
   $("profile-code").textContent = r.iso3;
   $("profile-stats").innerHTML = [
@@ -152,6 +160,44 @@ function renderScatter(rows) {
     el.addEventListener("focus", show);
     el.addEventListener("pointerleave", () => $("tooltip").hidden = true);
     el.addEventListener("blur", () => $("tooltip").hidden = true);
+    el.addEventListener("click", () => chooseCountry(el.dataset.country));
+    el.addEventListener("keydown", e => {
+      if (["Enter", " "].includes(e.key)) {
+        e.preventDefault();
+        chooseCountry(el.dataset.country);
+      }
+    });
+  });
+}
+
+function renderMap() {
+  const column = $("map-variable").value === "spend_ppp" ? "spend_ppp" : state.metric;
+  const rows = yearRows(),
+    values = rows.map(r => r[column]).filter(Number.isFinite);
+  const low = Math.min(...values),
+    high = Math.max(...values);
+  const unit = column === "spend_ppp" ? "$ ППС / человек" : "на 100 000";
+  const color = v => {
+    if (v == null) return "#e4e9e5";
+    const t = (v - low) / (high - low || 1);
+    return `rgb(${Math.round(40+167*t)},${Math.round(127-7*t)},${Math.round(126-51*t)})`;
+  };
+  const project = ([lon, lat]) => `${(15+(lon+180)/360*590).toFixed(2)},${(27+(85-lat)/145*265).toFixed(2)}`;
+  let body = '<rect x="0" y="0" width="620" height="330" fill="#fafcf9" rx="8"/>';
+  const sorted = world.slice().sort((a, b) => (a.iso3 === state.country) - (b.iso3 === state.country));
+  for (const feature of sorted) {
+    const row = rows.find(r => r.iso3 === feature.iso3),
+      selected = feature.iso3 === state.country;
+    const polygons = feature.geometry.type === "Polygon" ? [feature.geometry.coordinates] : feature.geometry.coordinates;
+    const path = polygons.map(p => p.map(ring => `M${ring.map(project).join("L")}Z`).join("")).join("");
+    const title = row ? `${row.country}: ${fmt(row[column],1)} ${unit}` : `${feature.name}: вне выборки`;
+    body += `<path d="${path}" fill="${color(row?.[column])}" fill-rule="evenodd" stroke="${selected?colors.navy:"#fff"}" stroke-width="${selected?1.8:.5}" ${row?`class="map-country" role="button" tabindex="0" data-country="${row.iso3}" aria-label="${esc(title)}"`:""}><title>${esc(title)}</title></path>`;
+  }
+  body += '<text x="15" y="319" class="svg-small">Границы: Natural Earth · страны вне выборки показаны серым</text>';
+  $("scatter").innerHTML = svg(620, 330, body, `Карта: ${column==="spend_ppp"?"расходы":names[state.metric]}, ${state.year}`);
+  $("scatter-caption").textContent = `Цвет: ${column==="spend_ppp"?"расходы на человека":names[state.metric].toLowerCase()}. Шкала рассчитана для выбранного года.`;
+  $("scatter-legend").innerHTML = `<span>${fmt(low)} ${unit}</span><span class="map-gradient"></span><span>${fmt(high)} ${unit}</span><span>Серый: нет данных · обводка: выбор</span>`;
+  $("scatter").querySelectorAll(".map-country").forEach(el => {
     el.addEventListener("click", () => chooseCountry(el.dataset.country));
     el.addEventListener("keydown", e => {
       if (["Enter", " "].includes(e.key)) {
@@ -291,6 +337,9 @@ async function boot() {
     const response = await fetch("data/atlas.json");
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     atlas = await response.json();
+    const boundaries = await fetch("data/world.json");
+    if (!boundaries.ok) throw new Error(`Map HTTP ${boundaries.status}`);
+    world = await boundaries.json();
     const countries = [...new Map(atlas.panel.map(r => [r.iso3, r])).values()].sort((a, b) => a.country.localeCompare(b.country));
     for (const r of countries) {
       const option = document.createElement("option");
@@ -316,6 +365,15 @@ async function boot() {
       render();
     });
     $("spend-change").addEventListener("input", renderResearch);
+    document.querySelectorAll("[data-chart]").forEach(button => button.addEventListener("click", () => {
+      state.chart = button.dataset.chart;
+      document.querySelectorAll("[data-chart]").forEach(b => {
+        b.classList.toggle("active", b.dataset.chart === state.chart);
+        b.setAttribute("aria-pressed", String(b.dataset.chart === state.chart));
+      });
+      renderOverview();
+    }));
+    $("map-variable").addEventListener("change", renderOverview);
     $("search").addEventListener("input", renderData);
     document.querySelectorAll(".nav-item").forEach(el => el.addEventListener("click", () => setView(el.dataset.view)));
     document.querySelectorAll("[data-jump]").forEach(el => el.addEventListener("click", () => {

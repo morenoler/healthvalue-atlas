@@ -102,6 +102,8 @@ def test_calibration_quantile_uses_finite_sample_rank():
 def test_dashboard_snapshot_matches_panel_and_metrics():
     data = json.loads((WEB / "data" / "atlas.json").read_text(encoding="utf-8"))
     panel = pd.read_csv(PROCESSED / "panel.csv")
+    boundaries = json.loads((WEB / "data" / "world.json").read_text(encoding="utf-8"))
+    assert set(panel.iso3) <= {feature["iso3"] for feature in boundaries}
     assert len(data["panel"]) == len(panel)
     assert sum(r["treatable"] is None for r in data["panel"]) == 30
     assert sum(m["selected"] for m in data["forecast"]["metrics"]) == 1

@@ -61,3 +61,7 @@
 - Пропуски доступны в `reports/data_quality.json` и на графике покрытия.
 
 Исходные ответы лежат в `data/raw`. JSON и CSV сжаты gzip. URL, время загрузки, дата обновления источника и контрольные суммы лежат в `data/raw/manifest.json`.
+
+## Географическая основа
+
+Карта использует [Natural Earth, admin 0 countries, 1:110 млн](https://github.com/nvkelso/natural-earth-vector/blob/master/geojson/ne_110m_admin_0_countries.geojson). Для соединения служит поле `ADM0_A3`. Геометрия и названия хранятся локально в `web/data/world.json`. Антарктида не показана. URL и SHA-256 исходного GeoJSON есть в `docs/geography_source.json`. Границы нужны только для отображения и не участвуют в моделях.

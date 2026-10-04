@@ -34,6 +34,7 @@ def test_scenario_interval_direction(change):
 def test_portable_dashboard_and_download():
     assert client.get("/").status_code == 200
     assert client.get("/data/atlas.json").status_code == 200
+    assert client.get("/data/world.json").status_code == 200
     response = client.get("/data/panel.csv")
     assert response.status_code == 200
     assert response.text.startswith("iso3,year")
