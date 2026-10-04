@@ -1,0 +1,90 @@
+[
+  {
+    "file": "oecd_mortality.csv.gz",
+    "url": "https://sdmx.oecd.org/public/rest/v1/data/OECD.ELS.HD,DSD_HEALTH_STAT@DF_AM,1.1/?startPeriod=2010&endPeriod=2023&format=csvfile",
+    "retrieved_at_utc": "2026-10-04T09:23:15.837586+00:00",
+    "sha256": "9f70ae14645da7da7edaa2b256d71fe0b25d669e2e9d30f67e0f60cdd60cb255",
+    "source_bytes": 1136117,
+    "source_last_updated": "2026-02-24"
+  },
+  {
+    "file": "countries.json.gz",
+    "url": "https://api.worldbank.org/v2/country?format=json&per_page=400",
+    "retrieved_at_utc": "2026-10-04T09:23:15.306920+00:00",
+    "sha256": "3852e7ca4f1badff7358603fcf2193be7511b102c13bacf8b164ed05f222ca5f",
+    "source_bytes": 113590,
+    "source_last_updated": null
+  },
+  {
+    "file": "SH.XPD.CHEX.PP.CD.json.gz",
+    "url": "https://api.worldbank.org/v2/country/all/indicator/SH.XPD.CHEX.PP.CD?format=json&date=2009:2023&per_page=10000&source=2",
+    "retrieved_at_utc": "2026-10-04T09:23:15.501797+00:00",
+    "sha256": "217dc72c906d30528b45720003482c92b8966bb7f0c95a5a06842fd011a42d60",
+    "source_bytes": 1054207,
+    "source_last_updated": "2026-07-13"
+  },
+  {
+    "file": "SH.XPD.CHEX.GD.ZS.json.gz",
+    "url": "https://api.worldbank.org/v2/country/all/indicator/SH.XPD.CHEX.GD.ZS?format=json&date=2009:2023&per_page=10000&source=2",
+    "retrieved_at_utc": "2026-10-04T09:23:23.834412+00:00",
+    "sha256": "9704cdb45bb285de139751a526497cbd28db18a96dbaddc1221a35cf3a52cf1d",
+    "source_bytes": 914126,
+    "source_last_updated": "2026-07-13"
+  },
+  {
+    "file": "SH.XPD.GHED.CH.ZS.json.gz",
+    "url": "https://api.worldbank.org/v2/country/all/indicator/SH.XPD.GHED.CH.ZS?format=json&date=2009:2023&per_page=10000&source=2",
+    "retrieved_at_utc": "2026-10-04T09:23:24.993509+00:00",
+    "sha256": "d36a6be213765893a0f41d62c03cd03614cccb741e735041a043b8f346c112c0",
+    "source_bytes": 1087488,
+    "source_last_updated": "2026-07-13"
+  },
+  {
+    "file": "SH.XPD.OOPC.CH.ZS.json.gz",
+    "url": "https://api.worldbank.org/v2/country/all/indicator/SH.XPD.OOPC.CH.ZS?format=json&date=2009:2023&per_page=10000&source=2",
+    "retrieved_at_utc": "2026-10-04T09:23:25.227810+00:00",
+    "sha256": "9ad6bc3fbcd32d05ceb12213acd76fbbb25acea8350d4a44e64bb1ef4e17fe87",
+    "source_bytes": 1003776,
+    "source_last_updated": "2026-07-13"
+  },
+  {
+    "file": "NY.GDP.PCAP.PP.KD.json.gz",
+    "url": "https://api.worldbank.org/v2/country/all/indicator/NY.GDP.PCAP.PP.KD?format=json&date=2009:2023&per_page=10000&source=2",
+    "retrieved_at_utc": "2026-10-04T09:23:24.227291+00:00",
+    "sha256": "6bb540d19df5c8dbb27a94596b2e42e7afe9ef68c629754df366fee4b7e43de3",
+    "source_bytes": 987830,
+    "source_last_updated": "2026-07-13"
+  },
+  {
+    "file": "SP.POP.65UP.TO.ZS.json.gz",
+    "url": "https://api.worldbank.org/v2/country/all/indicator/SP.POP.65UP.TO.ZS?format=json&date=2009:2023&per_page=10000&source=2",
+    "retrieved_at_utc": "2026-10-04T09:23:28.296428+00:00",
+    "sha256": "6924e0f31920b792e726cc21a345d7bea31dafe8bad90a77450c7e5e158ccafc",
+    "source_bytes": 995276,
+    "source_last_updated": "2026-07-13"
+  },
+  {
+    "file": "SP.DYN.LE00.IN.json.gz",
+    "url": "https://api.worldbank.org/v2/country/all/indicator/SP.DYN.LE00.IN?format=json&date=2009:2023&per_page=10000&source=2",
+    "retrieved_at_utc": "2026-10-04T09:23:28.331854+00:00",
+    "sha256": "9134e55bdb7a6668fb44a1601f84a0a3d07708223dcbeb8b76a01912dfc86d95",
+    "source_bytes": 906878,
+    "source_last_updated": "2026-07-13"
+  },
+  {
+    "file": "SP.POP.TOTL.json.gz",
+    "url": "https://api.worldbank.org/v2/country/all/indicator/SP.POP.TOTL?format=json&date=2009:2023&per_page=10000&source=2",
+    "retrieved_at_utc": "2026-10-04T09:23:28.314641+00:00",
+    "sha256": "38cb15cc060712576c4c9019ecba481ad40e79b3b68d1c4cf3095e621f8cca8b",
+    "source_bytes": 799046,
+    "source_last_updated": "2026-07-13"
+  },
+  {
+    "file": "SP.URB.TOTL.IN.ZS.json.gz",
+    "url": "https://api.worldbank.org/v2/country/all/indicator/SP.URB.TOTL.IN.ZS?format=json&date=2009:2023&per_page=10000&source=2",
+    "retrieved_at_utc": "2026-10-04T09:23:31.730394+00:00",
+    "sha256": "ef93d4c74f3ef3278e36401918d24537a75b1908271f4b82ff3893cf09fb542e",
+    "source_bytes": 945188,
+    "source_last_updated": "2026-07-13"
+  }
+]

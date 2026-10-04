@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Расходы на здравоохранение, результаты лечения и проверка прогнозов на открытых данных ОЭСР и ВОЗ.">
+  <title>HealthValue Atlas | Экономика здоровья</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#content">Перейти к содержанию</a>
+  <aside class="sidebar">
+    <a class="brand" href="#overview" aria-label="HealthValue Atlas, обзор"><span class="brand-icon">h<span>v</span></span><span>HEALTHVALUE<small>ATLAS / RESEARCH LAB</small></span></a>
+    <div class="rail-label">ЭКОНОМИКА ЗДОРОВЬЯ</div>
+    <nav aria-label="Разделы исследования">
+      <button class="nav-item active" data-view="overview"><span>01</span> Обзор стран <i>↗</i></button>
+      <button class="nav-item" data-view="research"><span>02</span> Связь и сценарии <i>↗</i></button>
+      <button class="nav-item" data-view="forecast"><span>03</span> Проверка прогноза <i>↗</i></button>
+      <button class="nav-item" data-view="data"><span>04</span> Данные и метод <i>↗</i></button>
+    </nav>
+    <div class="rail-note"><span class="status-dot"></span> Открытые данные<p>Наблюдения за 2010-2023 годы.<br>ОЭСР · ВОЗ · Всемирный банк</p></div>
+    <div class="rail-bottom"><div class="mini-bars"><b></b><b></b><b></b><b></b><b></b><b></b><b></b></div><p>За каждым показателем<br>стоит исследовательский вопрос.</p><a href="https://github.com/morenoler/healthvalue-atlas" target="_blank" rel="noopener">Код и исследование ↗</a></div>
+  </aside>
+
+  <main id="content">
+    <div class="topline"><span>PUBLIC HEALTH / DATA SCIENCE</span><a href="data/panel.csv" download>↓ Скачать данные</a></div>
+    <header class="page-header"><div><p class="eyebrow">HEALTHVALUE ATLAS</p><h1 id="page-title">Цена здоровья.<br><span>Результат лечения.</span></h1><p id="page-description" class="intro">Как страны превращают расходы на здравоохранение в результаты. Исследуйте данные и проверьте выводы.</p></div><div class="edition"><span>RESEARCH EDITION</span><strong>2010<span> - </span>2023</strong><small id="edition-count">Официальная статистика</small></div></header>
+    <div id="loading" role="status" class="notice">Загрузка исследовательского среза…</div>
+    <div id="application" hidden>
+      <section class="filters" aria-label="Настройки анализа"><label>Страна<select id="country"></select></label><label>Год<select id="year"></select></label><label class="metric-filter">Показатель<select id="metric"><option value="treatable">Смертность: своевременное лечение</option><option value="preventable">Смертность: профилактика</option><option value="avoidable">Вся предотвратимая смертность</option></select></label><span class="filter-note" id="filter-note"></span></section>
+
+      <section id="overview" class="view active" aria-label="Обзор стран">
+        <div class="kpi-grid" id="kpis"></div>
+        <div class="chart-grid">
+          <article class="card scatter-card"><div class="card-heading"><div><p class="eyebrow">МЕЖДУ СТРАНАМИ</p><h2>Расходы и результат</h2></div><span class="pill" id="scatter-year"></span></div><p class="chart-caption">Каждая точка - страна. Нажмите на точку, чтобы открыть её профиль.</p><div id="scatter" class="chart"></div><div class="chart-footer"><span><b class="legend-dot teal"></b> Выборка</span><span><b class="legend-dot orange"></b> Выбранная страна</span><span>Расходы: текущие $ по ППС · логарифмическая шкала</span></div></article>
+          <article class="card profile-card"><div class="card-heading"><div><p class="eyebrow">ПРОФИЛЬ СТРАНЫ</p><h2 id="profile-name"></h2></div><span class="country-code" id="profile-code"></span></div><div id="profile-stats"></div><h3>Смертность по годам</h3><div id="trend" class="chart small-chart"></div><p class="chart-caption">На 100 000, с учётом возраста. Пропуски разрывают линию.</p></article>
+        </div>
+        <div class="bottom-grid"><article class="card"><div class="card-heading"><div><p class="eyebrow">СОПОСТАВИМЫЕ УСЛОВИЯ</p><h2>Ближайшие страны</h2></div><span class="pill">5 соседей</span></div><p class="chart-caption">Близость по логарифму реального ВВП на человека и доле населения 65+. Оба признака стандартизованы в выбранном году.</p><div id="peers"></div></article><article class="insight-card"><p class="eyebrow">ВОПРОС К ДАННЫМ</p><h2>Больше расходов.<br>Меньше смертей?</h2><p id="insight"></p><button class="text-button" data-jump="research">Проверить связь с учётом других факторов <span>↗</span></button></article></div>
+      </section>
+
+      <section id="research" class="view" aria-label="Связь и сценарии" hidden>
+        <div class="notice">Модели описывают статистическую связь. Они не оценивают причинный эффект бюджетного решения. Выбор страны и года задаёт точку отсчёта сценария. Коэффициент общий для всей выборки.</div>
+        <div class="research-grid"><article class="card"><p class="eyebrow">ПАНЕЛЬНАЯ МОДЕЛЬ</p><h2>Что меняется после учёта различий</h2><p class="chart-caption">Связь роста расходов на 10% со смертностью, которую можно снизить лечением. Полосы показывают 95% доверительные интервалы.</p><div id="forest" class="chart"></div><p class="chart-caption">Стандартные ошибки учитывают группы наблюдений по странам. Признаки расходов, дохода, возраста и платежей входят с лагом в один год.</p></article>
+        <article class="card scenario-card"><p class="eyebrow">СЦЕНАРИЙ ПО МОДЕЛИ</p><h2>Если расходы изменятся</h2><label for="spend-change">Изменение реальных расходов <output id="change-label">+10%</output></label><input id="spend-change" type="range" min="-20" max="20" step="1" value="10"><div class="range-labels"><span>-20%</span><span>0%</span><span>+20%</span></div><div id="scenario-result" aria-live="polite"></div><p class="chart-caption">Интервал отражает неопределённость коэффициента. Это не интервал прогноза для отдельной страны. Остальные факторы условно постоянны.</p></article></div>
+        <article class="card methodology"><p class="eyebrow">КАК УСТРОЕНА ОЦЕНКА</p><h2>Один вопрос, пять проверок</h2><div class="method-grid"><div><b>01 / Внутри страны</b><p>Эффекты стран учитывают постоянные различия. Эффекты лет учитывают общие годовые сдвиги.</p></div><div><b>02 / Устойчивость</b><p>Отдельные оценки до 2020 года, для стран с высоким доходом и с линейными трендами стран.</p></div><div><b>03 / Сопоставимые цены</b><p>Прокси реальных расходов = доля расходов в ВВП × реальный ВВП по ППС. Отраслевой индекс медицинских цен здесь не используется.</p></div></div></article>
+      </section>
+
+      <section id="forecast" class="view" aria-label="Проверка прогноза" hidden>
+        <div class="notice">Прогноз относится к смертности, которую можно снизить лечением. Это ретроспективная проверка на год вперёд. Она предполагает, что показатели прошлого года уже доступны.</div>
+        <div class="timeline"><div><span>ОБУЧЕНИЕ</span><b>2011-2019</b><small>Валидация: 2016-2019</small></div><div><span>КАЛИБРОВКА</span><b>2020-2021</b><small>Только ширина интервала</small></div><div><span>НЕЗАВИСИМЫЙ ТЕСТ</span><b>2022-2023</b><small>Без выбора модели по тесту</small></div></div>
+        <div class="kpi-grid" id="model-kpis"></div><div class="chart-grid"><article class="card"><p class="eyebrow">СРАВНЕНИЕ МОДЕЛЕЙ</p><h2>Сильная база: значение прошлого года</h2><p class="chart-caption">MAE - средняя абсолютная ошибка на 100 000. Меньше лучше. Выбор модели опирается только на временную валидацию.</p><div class="table-wrap"><table><thead><tr><th>Модель</th><th>Валидация</th><th>Тест</th><th>Покрытие</th></tr></thead><tbody id="model-table"></tbody></table></div></article><article class="card"><p class="eyebrow">ФАКТ И ПРОГНОЗ</p><h2 id="prediction-country"></h2><div id="predictions"></div><p class="chart-caption">Интервалы: номинальный уровень 90%, калибровка на 2020-2021 годах. При сдвиге распределения покрытие не гарантировано.</p></article></div>
+      </section>
+
+      <section id="data" class="view" aria-label="Данные и метод" hidden>
+        <div class="method-grid source-cards"><article class="card"><p class="eyebrow">01 / ИСХОД</p><h2>ОЭСР</h2><p>Смертность до 75 лет. Возрастная стандартизация по населению ОЭСР 2015 года. Оба пола.</p><a href="https://www.oecd.org/en/data/datasets/oecd-health-statistics.html" target="_blank" rel="noopener">Health Statistics ↗</a></article><article class="card"><p class="eyebrow">02 / ФИНАНСИРОВАНИЕ</p><h2>ВОЗ</h2><p>Расходы и структура финансирования из GHED. Данные получены через World Bank WDI.</p><a href="https://apps.who.int/nha/database/" target="_blank" rel="noopener">Global Health Expenditure ↗</a></article><article class="card"><p class="eyebrow">03 / КОНТЕКСТ</p><h2>Всемирный банк</h2><p>ВВП по ППС, возраст населения, урбанизация и ожидаемая продолжительность жизни.</p><a href="https://data.worldbank.org/" target="_blank" rel="noopener">World Development Indicators ↗</a></article></div>
+        <article class="card"><div class="card-heading"><div><p class="eyebrow">ПРОВЕРЯЕМЫЙ СРЕЗ</p><h2>Таблица наблюдений</h2></div><label class="search-label">Поиск страны<input id="search" type="search" placeholder="Название или ISO-код"></label></div><p id="quality-note" class="chart-caption"></p><div class="table-wrap"><table><thead><tr><th>Страна</th><th>Год</th><th>Расходы, $ ППС</th><th id="table-outcome">Смертность</th><th>ВВП, $ ППС 2021</th><th>Возраст 65+, %</th></tr></thead><tbody id="data-table"></tbody></table></div><p class="chart-caption">Расходы: текущие цены. ВВП: постоянные цены 2021 года. Пустые значения показаны явно. Сводки дают каждой стране одинаковый вес.</p></article>
+      </section>
+      <footer><span>HealthValue Atlas · Воспроизводимое исследование</span><span id="snapshot-date"></span><a href="https://github.com/morenoler/healthvalue-atlas/tree/main/reports" target="_blank" rel="noopener">Аналитический отчёт ↗</a></footer>
+    </div>
+  </main>
+  <div id="tooltip" role="tooltip" hidden></div>
+</body>
+</html>

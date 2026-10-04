@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.ruff_cache/
+.env
+.env.*
+!.env.example
+.idea/
+.DS_Store
+*.log
+data/atlas.sqlite

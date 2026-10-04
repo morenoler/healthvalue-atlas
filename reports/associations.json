@@ -1,0 +1,84 @@
+{
+  "estimates": [
+    {
+      "specification": "Pooled association",
+      "coefficient": -0.31521782386874786,
+      "ci_low": -0.7351250281007474,
+      "ci_high": 0.1046893803632517,
+      "p_value": 0.137536567245141,
+      "n": 614,
+      "countries": 46,
+      "r_squared": 0.5604810147394792,
+      "change_10pct": -2.9596648347276044,
+      "change_10pct_low": -6.766668919058539,
+      "change_10pct_high": 1.0027909526592937
+    },
+    {
+      "specification": "Country + year effects",
+      "coefficient": -0.015326080778180713,
+      "ci_low": -0.2568727629616121,
+      "ci_high": 0.2262206014052507,
+      "p_value": 0.8988810837543065,
+      "n": 614,
+      "countries": 46,
+      "r_squared": 0.981211471869367,
+      "change_10pct": -0.14596651656647586,
+      "change_10pct_low": -2.418532153939734,
+      "change_10pct_high": 2.179524688439338
+    },
+    {
+      "specification": "Before 2020",
+      "coefficient": 0.015393125823221027,
+      "ci_low": -0.18765597950863416,
+      "ci_high": 0.21844223115507622,
+      "p_value": 0.87932619674253,
+      "n": 451,
+      "countries": 46,
+      "r_squared": 0.9894167726711621,
+      "change_10pct": 0.1468198339351412,
+      "change_10pct_low": -1.7726528467592595,
+      "change_10pct_high": 2.1038011665346357
+    },
+    {
+      "specification": "High income",
+      "coefficient": 0.012248383226097087,
+      "ci_low": -0.22427578509680088,
+      "ci_high": 0.24877255154899505,
+      "p_value": 0.9170011278317749,
+      "n": 507,
+      "countries": 38,
+      "r_squared": 0.9860799351973337,
+      "change_10pct": 0.11680772790783056,
+      "change_10pct_low": -2.114892291568904,
+      "change_10pct_high": 2.3993886739476222
+    },
+    {
+      "specification": "Country trends",
+      "coefficient": -0.006576425924046225,
+      "ci_low": -0.12794319981730062,
+      "ci_high": 0.11479034796920817,
+      "p_value": 0.9135790798771569,
+      "n": 614,
+      "countries": 46,
+      "r_squared": 0.9934485793733014,
+      "change_10pct": -0.06266039389956068,
+      "change_10pct_low": -1.2120240330055432,
+      "change_10pct_high": 1.1000756902025843
+    }
+  ],
+  "main": {
+    "specification": "Country + year effects",
+    "coefficient": -0.015326080778180713,
+    "ci_low": -0.2568727629616121,
+    "ci_high": 0.2262206014052507,
+    "p_value": 0.8988810837543065,
+    "n": 614,
+    "countries": 46,
+    "r_squared": 0.981211471869367,
+    "change_10pct": -0.14596651656647586,
+    "change_10pct_low": -2.418532153939734,
+    "change_10pct_high": 2.179524688439338
+  },
+  "inference": "Country-clustered standard errors, t intervals",
+  "causal": false
+}

@@ -1,0 +1,24 @@
+{
+  "countries": 46,
+  "grid_rows": 644,
+  "mortality_rows": 614,
+  "complete_cross_section_rows": 614,
+  "start_year": 2010,
+  "end_year": 2023,
+  "missing_counts": {
+    "treatable": 30,
+    "spend_ppp": 0,
+    "health_gdp_pct": 0,
+    "public_share": 0,
+    "oop_share": 0,
+    "gdp_ppp_constant": 0,
+    "age65_pct": 0,
+    "life_expectancy": 0,
+    "population": 0,
+    "urban_pct": 0
+  },
+  "source_files": 11,
+  "source_sha256_verified": true,
+  "income_groups_note": "Current World Bank classification, not historical classification",
+  "excluded_oecd_codes": []
+}
