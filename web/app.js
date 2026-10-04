@@ -334,12 +334,14 @@ function render() {
 
 async function boot() {
   try {
-    const response = await fetch("data/atlas.json");
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    atlas = await response.json();
-    const boundaries = await fetch("data/world.json");
-    if (!boundaries.ok) throw new Error(`Map HTTP ${boundaries.status}`);
-    world = await boundaries.json();
+    async function loadData(name) {
+      const embedded = document.getElementById(`embedded-${name}`);
+      if (embedded) return JSON.parse(embedded.textContent);
+      const response = await fetch(`data/${name}.json`);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return response.json();
+    }
+    [atlas, world] = await Promise.all([loadData("atlas"), loadData("world")]);
     const countries = [...new Map(atlas.panel.map(r => [r.iso3, r])).values()].sort((a, b) => a.country.localeCompare(b.country));
     for (const r of countries) {
       const option = document.createElement("option");

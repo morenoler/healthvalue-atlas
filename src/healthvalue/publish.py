@@ -313,6 +313,9 @@ def main():
 Источники и определения: [описание данных](../docs/DATA.md). Дизайн анализа: [методология](../docs/METHODOLOGY.md).
 """
     (REPORTS / "ANALYSIS_RU.md").write_text(report, encoding="utf-8")
+    from .standalone import main as build_standalone
+
+    build_standalone()
     print(json.dumps(findings, indent=2))
 
 
