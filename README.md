@@ -2,7 +2,9 @@
 
 **Экономика здравоохранения: расходы, результаты лечения и прогноз смертности.**
 
-[Открыть приложение](https://morenoler.github.io/healthvalue-atlas/) · [Аналитический отчёт](reports/ANALYSIS_RU.md) · [Методология](docs/METHODOLOGY.md) · [Данные и источники](docs/DATA.md)
+[Открыть приложение](https://healthvalue-atlas.alexeytitenkov.chatgpt.site) · [Аналитический отчёт](reports/ANALYSIS_RU.md) · [Методология](docs/METHODOLOGY.md) · [Данные и источники](docs/DATA.md)
+
+Публичный сайт работает на Sites. Для просмотра не нужен локальный сервер. [Резервная версия на GitHub Pages](https://morenoler.github.io/healthvalue-atlas/) доступна в сетях без ограничений на github.io. GitHub Pages обновляется при изменениях в main; версию на Sites нужно публиковать отдельно.
 
 ![Интерфейс HealthValue Atlas](reports/figures/dashboard.jpg)
 
