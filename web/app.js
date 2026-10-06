@@ -13,6 +13,11 @@ const colors = {
   muted: "#a8b9d2",
   navy: "#252c37"
 };
+const metricMeaning = {
+  treatable: "Смерти до 75 лет, предотвратимые своевременным лечением.",
+  preventable: "Смерти до 75 лет, предотвратимые профилактикой.",
+  avoidable: "Смерти до 75 лет, предотвратимые лечением или профилактикой."
+};
 const names = {
   treatable: "Смертность: своевременное лечение",
   preventable: "Смертность: профилактика",
@@ -77,7 +82,6 @@ function setView(view) {
     data: ["Данные и методология", "Источники, пропуски и определения. Каждое число можно проверить и скачать."]
   };
   $("page-title").innerHTML = titles[view][0];
-  $("page-description").textContent = titles[view][1];
   $("metric").disabled = ["research", "forecast"].includes(view);
   $("year").disabled = view === "forecast";
   $("metric").closest("label").hidden = ["research", "forecast"].includes(view);
@@ -97,32 +101,36 @@ function renderOverview() {
     : Math.abs(gap) < 0.05
       ? "Смертность на уровне медианы выборки"
       : `Смертность на <strong>${fmt(Math.abs(gap), 1)}%</strong> ${gap > 0 ? "выше" : "ниже"} медианы выборки`;
+  const comparisonHelp = gap == null
+    ? "Для расчёта нужны смертность выбранной страны и ненулевая медиана. Нет данных — не означает ноль."
+    : `${esc(r.country)}: ${fmt(r[state.metric], 1)} на 100 тыс.; медиана: ${fmt(medRate, 1)}. Разница: (${fmt(r[state.metric], 1)} / ${fmt(medRate, 1)} − 1) × 100 = ${gap > 0 ? "+" : ""}${fmt(gap, 1)}%. Это сравнение стран за один год, а не изменение со временем. Расчёт выполнен до округления.`;
   $("kpis").innerHTML = `
-    <div class="summary-context"><span>Медианы выборки · ${state.year}</span><span>${rows.length} из ${atlas.quality.countries} стран · есть оба показателя</span></div>
+    <div class="summary-context"><span>Медианы выборки · ${state.year}</span><span>${rows.length} из ${atlas.quality.countries} стран</span></div>
     <div class="summary-values">
-      <div class="summary-metric"><span class="summary-label">Расходы на человека</span><div class="summary-number">${fmt(medSpend)} <span>$ ППС</span></div><small>В текущих ценах</small></div>
-      <div class="summary-metric"><span class="summary-label">Смертность</span><div class="summary-number">${fmt(medRate, 1)} <span>на 100 тыс.</span></div><small>С учётом возрастной структуры</small></div>
+      <div class="summary-metric"><span class="summary-label">Расходы на человека</span><div class="summary-number">${fmt(medSpend)} <span>$ ППС</span></div><small class="metric-explanation">Расходы на здоровье с поправкой на разницу цен между странами.</small></div>
+      <div class="summary-metric"><span class="summary-label">Смертность</span><div class="summary-number">${fmt(medRate, 1)} <span>на 100 тыс.</span></div><small class="metric-explanation">${metricMeaning[state.metric]}</small></div>
     </div>
-    <div class="summary-comparison"><span class="summary-country">${esc(r.country)}</span><span>${comparison}</span></div>`;
+    <details class="data-detail"><summary>Что значит медиана?</summary><p>Середина выборки: у половины стран показатель ниже, у половины — выше. Расходы даны в текущих ценах; смертность скорректирована по возрасту.</p><p>${rows.length} из ${atlas.quality.countries} стран — столько имеют одновременно данные о расходах и выбранной смертности за ${state.year} год. Остальные не входят в эти медианы.</p><p>Смертность — стандартизованный показатель для сравнения стран с разным возрастным составом, а не фактическое число умерших.</p></details>
+    <div class="summary-comparison"><span class="summary-country">${esc(r.country)}</span><span>${comparison}</span><details class="data-detail"><summary>Как получено это число?</summary><p>${comparisonHelp}</p></details></div>`;
   $("scatter-year").textContent = state.year;
   $("map-label").hidden = state.chart !== "map";
   if (state.chart === "map") renderMap();
   else {
-    $("scatter-caption").textContent = "Каждая точка - страна. Нажмите на точку, чтобы открыть её профиль.";
+    $("scatter-caption").textContent = "Каждая точка — страна.";
     $("scatter-legend").innerHTML = '<span><b class="legend-dot teal"></b>Выборка</span><span><b class="legend-dot orange"></b>Выбранная страна</span><span>Текущие $ по ППС · логарифмическая шкала</span>';
     renderScatter(rows);
   }
   $("profile-name").textContent = r.country;
   $("profile-code").textContent = r.iso3;
   $("profile-stats").innerHTML = [
-    ["Расходы на человека", r.spend_ppp, 0, " $ ППС"],
-    ["Смертность на 100 000", r[state.metric], 1, ""],
-    ["Прямые платежи граждан", r.oop_share, 1, "%"],
-    ["Доля населения 65+", r.age65_pct, 1, "%"]
-  ].map(([label, v, d, u]) => `<div class="stat-row"><span>${label}</span><b>${fmt(v,d)}${v==null?"":u}</b></div>`).join("");
+    ["Расходы на человека", r.spend_ppp, 0, " $ ППС", "В год, с поправкой на разницу цен"],
+    ["Смертность на 100 000", r[state.metric], 1, "", "Выбранная категория, с учётом возраста"],
+    ["Прямые платежи граждан", r.oop_share, 1, "%", r.oop_share == null ? "Доля расходов, оплаченная из своего кармана; данных нет" : `Из каждых 100 денежных единиц расходов на здоровье ${fmt(r.oop_share, 1)} оплачены напрямую гражданами`],
+    ["Доля населения 65+", r.age65_pct, 1, "%", r.age65_pct == null ? "Жители в возрасте 65 лет и старше; данных нет" : `Примерно ${fmt(r.age65_pct, 1)} из 100 жителей — в возрасте 65 лет и старше`]
+  ].map(([label, v, d, u, meaning]) => `<div class="stat-row"><span>${label}<small class="metric-explanation">${meaning}</small></span><b>${fmt(v,d)}${v==null?"":u}</b></div>`).join("");
   renderTrend();
   renderPeers();
-  $("insight").textContent = `В срезе за 2023 год корреляция расходов и смертности из категории «лечение» равна ${fmt(atlas.findings.spearman_spend_mortality,2)}. Это связь между странами. Панельная модель проверяет, как вывод меняется после учёта дохода, демографии и постоянных различий.`;
+  $("insight").textContent = `В срезе за 2023 год корреляция расходов и смертности из категории «лечение» равна ${fmt(atlas.findings.spearman_spend_mortality,2)}. Коэффициент от −1 до +1: минус означает, что большие расходы связаны с меньшей смертностью; близость к −1 — более сильную обратную связь. Это не доказательство причинности. Панельная модель проверяет, как вывод меняется после учёта дохода, демографии и постоянных различий.`;
 }
 
 function renderScatter(rows) {
@@ -143,7 +151,7 @@ function renderScatter(rows) {
   const ymax = Math.ceil(Math.max(...rows.map(r => r[state.metric])) / 50) * 50;
   const x = v => m.l + (Math.log10(v) - xMin) / (xMax - xMin) * (w - m.l - m.r),
     y = v => h - m.b - v / ymax * (h - m.t - m.b);
-  let body = `<text x="${m.l}" y="12" class="svg-title">Смертность на 100 000 · ниже лучше</text>`;
+  let body = `<text x="${m.l}" y="12" class="svg-title">Смертность на 100 000 · меньше лучше</text>`;
   for (let i = 0; i <= 4; i++) {
     const v = ymax * i / 4;
     body += `<line x1="${m.l}" y1="${y(v)}" x2="${w-m.r}" y2="${y(v)}" class="svg-grid"/><text x="${m.l-10}" y="${y(v)+4}" text-anchor="end" class="svg-label">${fmt(v)}</text>`;
@@ -207,7 +215,7 @@ function renderMap() {
     const polygons = feature.geometry.type === "Polygon" ? [feature.geometry.coordinates] : feature.geometry.coordinates;
     const path = polygons.map(p => p.map(ring => `M${ring.map(project).join("L")}Z`).join("")).join("");
     const title = row ? `${row.country}: ${fmt(row[column],1)} ${unit}` : `${feature.name}: вне выборки`;
-    body += `<path d="${path}" fill="${color(row?.[column])}" fill-rule="evenodd" stroke="${selected?colors.navy:"#fff"}" stroke-width="${selected?1.8:.5}" ${row?`class="map-country" role="button" tabindex="0" data-country="${row.iso3}" aria-label="${esc(title)}"`:""}><title>${esc(title)}</title></path>`;
+    body += `<path d="${path}" fill="${color(row?.[column])}" fill-rule="evenodd" stroke="${selected?colors.navy:"#fff"}" stroke-width="${selected?.8:.15}" ${row?`class="map-country" role="button" tabindex="0" data-country="${row.iso3}" aria-label="${esc(title)}"`:""}><title>${esc(title)}</title></path>`;
   }
   body += '<text x="15" y="319" class="svg-small">Границы: Natural Earth · страны вне выборки показаны серым</text>';
   $("scatter").innerHTML = svg(620, 330, body, `Карта: ${column==="spend_ppp"?"расходы":names[state.metric]}, ${state.year}`);
@@ -319,29 +327,32 @@ function renderResearch() {
   $("change-label").textContent = `${change>0?"+":""}${change}%`;
   const row = current();
   $("scenario-result").innerHTML = `<div class="scenario-number">${effect>0?"+":""}${fmt(effect,2)}%</div><p class="scenario-detail">Связанное изменение смертности<br>95% ДИ: ${fmt(ci[0],2)}% - ${fmt(ci[1],2)}%</p><p class="scenario-baseline">${esc(row.country)}, ${state.year}<br>${row.treatable!=null?`Точка отсчёта: ${fmt(row.treatable,1)} → ${fmt(row.treatable*(1+effect/100),1)} на 100 000`:"Для точки отсчёта нет данных о смертности."}</p>`;
+  $("scenario-help").textContent = `Расходы ${change > 0 ? "+" : ""}${change}% — изменение относительно выбранного года. По модели с ним связано изменение смертности ${effect > 0 ? "+" : ""}${fmt(effect, 2)}%: минус означает снижение, плюс — рост. 95% ДИ от ${fmt(ci[0], 2)}% до ${fmt(ci[1], 2)}% показывает неопределённость оценки.${ci[0] <= 0 && ci[1] >= 0 ? " Интервал включает ноль: данные совместимы с отсутствием изменения." : ""} Это относительное изменение показателя, а не процентные пункты и не доказанный эффект бюджета.`;
+
 }
 
 function renderForecast() {
   const f = atlas.forecast,
     selected = f.metrics.find(r => r.selected),
     base = f.metrics.find(r => r.model === "Persistence");
-  $("model-kpis").innerHTML = kpi("Выбор по валидации", esc(f.selected_model), `${f.train_n} строк обучения`) + kpi("MAE на тесте", fmt(selected.test_mae, 2), `${f.test_n} наблюдений · 2022-2023`) + kpi("Изменение MAE к базе", `${fmt((selected.test_mae/base.test_mae-1)*100,1)}%`, "Отрицательное значение - лучше") + kpi("Покрытие интервала", `${fmt(selected.interval_coverage*100,1)}%`, "Номинальный уровень: 90%");
+  $("model-kpis").innerHTML = kpi("Выбор по валидации", esc(f.selected_model), "Модель с наименьшей ошибкой на валидации") + kpi("MAE на тесте", fmt(selected.test_mae, 2), "Средняя ошибка на 100 тыс. · меньше лучше") + kpi("Изменение MAE к базе", `${fmt((selected.test_mae/base.test_mae-1)*100,1)}%`, "К прогнозу по прошлому году · минус лучше") + kpi("Покрытие интервала", `${fmt(selected.interval_coverage*100,1)}%`, "Доля фактов внутри интервала · цель 90%");
+  const relativeError = (selected.test_mae / base.test_mae - 1) * 100;
+  $("forecast-help").innerHTML = `<p><b>MAE ${fmt(selected.test_mae, 2)}:</b> среднее абсолютное отклонение прогноза от факта — ${fmt(selected.test_mae, 2)} смерти на 100 тыс. Это не проценты.</p><p><b>${fmt(relativeError, 1)}% к базе:</b> ошибка модели ${fmt(selected.test_mae, 2)} против ${fmt(base.test_mae, 2)} у прогноза по прошлому году. Отрицательный процент означает снижение ошибки.</p><p><b>Покрытие ${fmt(selected.interval_coverage * 100, 1)}%:</b> доля фактических значений, попавших в прогнозные интервалы. Цель — 90%; высокое покрытие может быть следствием широких интервалов.</p>`;
   $("model-table").innerHTML = f.metrics.map(r => `<tr class="${r.selected?"selected":""}"><td>${esc(r.model)}${r.selected?'<span class="model-tag">ВЫБРАНА ПО ВАЛИДАЦИИ</span>':""}</td><td>${fmt(r.validation_mae,2)}</td><td>${fmt(r.test_mae,2)}</td><td>${fmt(r.interval_coverage*100,1)}%</td></tr>`).join("");
   $("prediction-country").textContent = current().country;
   const predictions = atlas.predictions.filter(r => r.iso3 === state.country);
-  $("predictions").innerHTML = predictions.length ? predictions.map(r => `<div class="prediction-row"><span>${r.year} ГОД</span><div class="prediction-values"><b>${fmt(r.actual,1)}<small>Факт</small></b><b>${fmt(r.predicted,1)}<small>Прогноз</small></b></div><small>Интервал: ${fmt(r.lower,1)} - ${fmt(r.upper,1)} на 100 000</small></div>`).join("") : '<p class="empty">Для этой страны нет полных тестовых наблюдений.</p>';
+  $("predictions").innerHTML = predictions.length ? predictions.map(r => `<div class="prediction-row"><span>${r.year} ГОД</span><div class="prediction-values"><b>${fmt(r.actual,1)}<small>Факт · на 100 тыс.</small></b><b>${fmt(r.predicted,1)}<small>Прогноз · на 100 тыс.</small></b></div><small>Интервал: ${fmt(r.lower,1)} - ${fmt(r.upper,1)} на 100 000</small></div>`).join("") : '<p class="empty">Для этой страны нет полных тестовых наблюдений.</p>';
 }
 
 function renderData() {
   const query = $("search").value.toLowerCase().trim();
   const rows = yearRows().filter(r => `${r.country} ${r.iso3}`.toLowerCase().includes(query)).sort((a, b) => a.country.localeCompare(b.country));
   $("data-table").innerHTML = rows.length ? rows.map(r => `<tr class="${r.iso3===state.country?"selected":""}"><td>${esc(r.country)} <small>${r.iso3}</small></td><td>${r.year}</td><td>${fmt(r.spend_ppp)}</td><td>${fmt(r[state.metric],1)}</td><td>${fmt(r.gdp_ppp_constant)}</td><td>${fmt(r.age65_pct,1)}</td></tr>`).join("") : '<tr><td colspan="6">Страна не найдена</td></tr>';
-  $("table-outcome").textContent = state.metric === "treatable" ? "Лечение, на 100 тыс." : state.metric === "preventable" ? "Профилактика, на 100 тыс." : "Все причины, на 100 тыс.";
+  $("table-outcome").textContent = state.metric === "treatable" ? "Лечение, на 100 тыс." : state.metric === "preventable" ? "Профилактика, на 100 тыс." : "Предотвратимая, на 100 тыс.";
   $("quality-note").textContent = `${rows.length} стран за ${state.year} год. Во всём срезе: ${atlas.quality.mortality_rows} строк с исходом из ${atlas.quality.grid_rows}. SHA-256 всех ${atlas.quality.source_files} исходных файлов проверены при сборке.`;
 }
 
 function render() {
-  $("filter-note").textContent = state.view === "research" ? "Исход модели: лечение" : state.view === "forecast" ? "Тест: 2022-2023" : "Один год для всех стран";
   if (state.view === "overview") renderOverview();
   if (state.view === "research") renderResearch();
   if (state.view === "forecast") renderForecast();
@@ -402,7 +413,6 @@ async function boot() {
       });
     }));
     window.addEventListener("hashchange", () => setView(location.hash.slice(1)));
-    $("edition-count").textContent = `${atlas.quality.countries} стран · 14 лет наблюдений`;
     const dates = atlas.sources.map(s => s.retrieved_at_utc.slice(0, 10)).sort();
     $("snapshot-date").textContent = `Срез загружен: ${dates.at(-1)} · данные до 2023`;
     $("application").hidden = false;

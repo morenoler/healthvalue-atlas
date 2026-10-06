@@ -6,1629 +6,224 @@
   <meta name="description" content="Расходы на здравоохранение, результаты лечения и проверка прогнозов на открытых данных ОЭСР и ВОЗ.">
   <title>HealthValue Atlas | Экономика здоровья</title>
   <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTYiIGZpbGw9IiMxNzJlM2IiLz48cGF0aCBkPSJNMTUgNDZWMTdoN3YxM2M3LTcgMTctNCAxNyA3djloLTd2LTljMC03LTEwLTctMTAgMHY5eiIgZmlsbD0iI2Y0ZjVlZiIvPjxwYXRoIGQ9Im0zOSAyOCA3IDE4IDktMjUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2Q4OGE1NyIgc3Ryb2tlLXdpZHRoPSI1Ii8+PC9zdmc+Cg==" type="image/svg+xml">
-  <style>.chart-controls {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  margin: 8px 0 10px;
-  min-height: 32px
-}
-
-.segmented {
-  display: flex;
-  gap: 3px;
-  background: #edf1f8;
-  padding: 3px;
-  border-radius: 5px
-}
-
-.segmented button {
-  border: 0;
-  background: transparent;
-  color: #7a7e85;
-  border-radius: 4px;
-  padding: 5px 12px;
-  font-size: 10px
-}
-
-.segmented button.active {
-  background: #fbffff;
-  color: #696d74;
-  box-shadow: 0 1px 4px #2b2f3612
-}
-
-#map-label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 9px
-}
-
-#map-variable {
-  margin: 0;
-  padding: 5px 8px;
-  min-width: 100px;
-  font-size: 10px
-}
-
-.map-country {
-  cursor: pointer
-}
-
-.map-country:hover,
-.map-country:focus-visible {
-  stroke: #2b2f36;
-  stroke-width: 1.8;
-  outline: none
-}
-
-.map-gradient {
-  display: inline-block;
-  min-width: 60px;
-  max-width: 120px;
-  flex: 1;
-  height: 7px;
-  border-radius: 4px;
-  background: linear-gradient(to right, #696d74, #93979e);
-  align-self: center
-}
-
-:root {
-  --paper: #f4f8ff;
-  --card: #fbffff;
-  --navy: #2b2f36;
-  --muted: #70747b;
-  --line: #e9edf4;
-  --teal: #696d74;
-  --orange: #93979e;
-  --light: #f1f5fc;
-  --font: "Segoe UI", Arial, sans-serif
-}
-
-* {
-  box-sizing: border-box
-}
-
-body {
-  margin: 0;
-  background: var(--paper);
-  color: var(--navy);
-  font-family: var(--font);
-  font-size: 14px;
-  line-height: 1.6
-}
-
-button,
-input,
-select {
-  font: inherit
-}
-
-button,
-a,
-input,
-select {
-  -webkit-tap-highlight-color: transparent
-}
-
-a {
-  color: var(--teal);
-  text-underline-offset: 4px
-}
-
-button {
-  cursor: pointer
-}
-
-button:focus-visible,
-a:focus-visible,
-input:focus-visible,
-select:focus-visible,
-circle:focus-visible {
-  outline: 3px solid var(--orange);
-  outline-offset: 4px
-}
-
-.sidebar {
-  width: 236px;
-  background: var(--navy);
-  color: #e8ecf3;
-  position: fixed;
-  inset: 0 auto 0 0;
-  padding: 36px 24px;
-  display: flex;
-  flex-direction: column
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 13px;
-  text-decoration: none;
-  color: #fbffff;
-  font-weight: 700;
-  font-size: 13px;
-  letter-spacing: 1.5px;
-  line-height: 1.2
-}
-
-.brand small {
-  display: block;
-  font-size: 8px;
-  letter-spacing: 2px;
-  margin-top: 8px;
-  color: #b1b5bc
-}
-
-.brand-icon {
-  font-size: 40px;
-  letter-spacing: -8px;
-  font-weight: 500;
-  line-height: 1;
-  margin-right: 8px
-}
-
-.brand-icon span {
-  color: #92969d
-}
-
-.rail-label {
-  font-size: 9px;
-  letter-spacing: 2px;
-  color: #8d9198;
-  margin: 55px 0 17px
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  border: 0;
-  border-radius: 6px;
-  color: #c1c5cc;
-  background: none;
-  text-align: left;
-  padding: 13px 10px;
-  margin: 6px 0;
-  font-size: 12px;
-  gap: 10px
-}
-
-.nav-item span {
-  font-size: 10px;
-  color: #84888f;
-  font-variant-numeric: tabular-nums
-}
-
-.nav-item i {
-  font-style: normal;
-  margin-left: auto;
-  opacity: 0
-}
-
-.nav-item.active {
-  background: #3c4047;
-  color: #fbffff
-}
-
-.nav-item.active i {
-  opacity: 1;
-  color: #adb1b8
-}
-
-.nav-item:hover {
-  background: #363a41
-}
-
-.rail-note {
-  border-top: 1px solid #43474e;
-  margin-top: 34px;
-  padding-top: 24px;
-  font-size: 11px;
-  color: #d8dce3
-}
-
-.rail-note p {
-  font-size: 10px;
-  color: #a0a4ab;
-  line-height: 1.9;
-  margin-top: 10px
-}
-
-.status-dot {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  background: #a6aab1;
-  border-radius: 50%;
-  margin-right: 6px
-}
-
-.rail-bottom {
-  margin-top: auto;
-  font-size: 11px;
-  color: #a9adb4;
-  line-height: 1.8
-}
-
-.rail-bottom a {
-  font-size: 10px;
-  color: #dbdfe6
-}
-
-.mini-bars {
-  display: flex;
-  gap: 5px;
-  align-items: end;
-  height: 50px;
-  margin-bottom: 20px
-}
-
-.mini-bars b {
-  width: 12px;
-  background: #61656c;
-  border-radius: 2px 2px 0 0;
-  height: 50%
-}
-
-.mini-bars b:nth-child(2) {
-  height: 75%
-}
-
-.mini-bars b:nth-child(3) {
-  height: 65%
-}
-
-.mini-bars b:nth-child(4) {
-  height: 95%;
-  background: #868a91
-}
-
-.mini-bars b:nth-child(5) {
-  height: 85%
-}
-
-.mini-bars b:nth-child(6) {
-  height: 60%
-}
-
-.mini-bars b:nth-child(7) {
-  height: 40%
-}
-
-main {
-  margin-left: 236px;
-  max-width: 1800px;
-  padding: 28px 42px 18px
-}
-
-.topline {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 10px;
-  letter-spacing: 1.6px;
-  color: var(--muted);
-  border-bottom: 1px solid #dde1e8;
-  padding-bottom: 20px
-}
-
-.topline a {
-  letter-spacing: 0;
-  text-decoration: none;
-  color: var(--navy);
-  font-size: 11px
-}
-
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 32px 0 29px;
-  gap: 30px
-}
-
-.eyebrow {
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 1.9px;
-  color: var(--teal);
-  margin: 0 0 10px
-}
-
-h1 {
-  font-size: 43px;
-  line-height: 1.12;
-  letter-spacing: -1.9px;
-  font-weight: 550;
-  margin: 0 0 16px
-}
-
-h1 span {
-  color: #8b8f96
-}
-
-.intro {
-  font-size: 12px;
-  color: #7a7e85;
-  max-width: 500px;
-  line-height: 1.8;
-  margin: 0
-}
-
-.edition {
-  text-align: right;
-  white-space: nowrap
-}
-
-.edition>span {
-  font-size: 9px;
-  letter-spacing: 1.8px;
-  color: var(--muted)
-}
-
-.edition strong {
-  display: block;
-  font-size: 30px;
-  font-weight: 450;
-  letter-spacing: -1px;
-  margin: 8px 0
-}
-
-.edition strong span {
-  color: #afb3ba
-}
-
-.edition small {
-  font-size: 10px;
-  color: var(--muted)
-}
-
-.filters {
-  display: flex;
-  gap: 18px;
-  align-items: end;
-  background: #e9edf4;
-  border: 1px solid #e1e5ec;
-  padding: 15px 18px;
-  border-radius: 8px;
-  margin-bottom: 24px
-}
-
-label {
-  display: block;
-  color: #696d74;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: .3px
-}
-
-select,
-input[type=search] {
-  display: block;
-  background: white;
-  border: 1px solid #d8dce3;
-  border-radius: 5px;
-  padding: 9px 30px 9px 10px;
-  color: var(--navy);
-  font-size: 11px;
-  margin-top: 5px;
-  max-width: 100%
-}
-
-select {
-  min-width: 110px
-}
-
-#country {
-  width: 190px
-}
-
-.metric-filter {
-  flex: 1
-}
-
-.metric-filter select {
-  width: 100%
-}
-
-.filter-note {
-  font-size: 10px;
-  align-self: center;
-  color: #757980;
-  max-width: 130px
-}
-
-.kpi-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 15px;
-  margin-bottom: 21px
-}
-
-.kpi {
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 17px 19px 16px;
-  min-height: 115px
-}
-
-.kpi-label {
-  font-size: 10px;
-  color: var(--muted);
-  margin: 0 0 8px
-}
-
-.kpi-value {
-  font-size: 29px;
-  font-weight: 550;
-  letter-spacing: -.8px;
-  line-height: 1.3;
-  font-variant-numeric: tabular-nums
-}
-
-.kpi-value small {
-  font-size: 12px;
-  font-weight: 400;
-  letter-spacing: 0;
-  color: var(--muted)
-}
-
-.kpi-note {
-  font-size: 9px;
-  color: #83878e;
-  margin-top: 7px
-}
-
-.kpi:first-child {
-  border-top: 3px solid var(--teal);
-  padding-top: 15px
-}
-
-.chart-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.8fr) minmax(290px, 1fr);
-  gap: 20px;
-  margin-bottom: 20px
-}
-
-.card {
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 24px;
-  min-width: 0
-}
-
-.card-heading {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px
-}
-
-.card h2,
-.insight-card h2 {
-  font-size: 20px;
-  line-height: 1.25;
-  font-weight: 550;
-  letter-spacing: -.5px;
-  margin: 0 0 10px
-}
-
-h3 {
-  font-size: 11px;
-  font-weight: 600;
-  margin: 22px 0 0
-}
-
-.pill {
-  font-size: 9px;
-  border: 1px solid #e1e5ec;
-  border-radius: 5px;
-  padding: 4px 10px;
-  white-space: nowrap;
-  color: #767a81
-}
-
-.chart-caption {
-  font-size: 10px;
-  line-height: 1.8;
-  color: var(--muted);
-  margin: 4px 0 12px
-}
-
-.chart svg {
-  display: block;
-  width: 100%;
-  height: auto;
-  overflow: visible
-}
-
-.chart {
-  margin-top: 12px
-}
-
-.scatter-card .chart {
-  min-height: 260px
-}
-
-.chart-footer {
-  border-top: 1px solid #ebeff6;
-  padding-top: 12px;
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-  font-size: 8px;
-  color: var(--muted)
-}
-
-.chart-footer span:last-child {
-  margin-left: auto
-}
-
-.legend-dot {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  margin-right: 5px
-}
-
-.teal {
-  background: var(--teal)
-}
-
-.orange {
-  background: var(--orange)
-}
-
-.country-code {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--teal);
-  padding: 9px;
-  background: var(--light);
-  border-radius: 6px
-}
-
-.stat-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 15px;
-  padding: 11px 0;
-  border-bottom: 1px solid #ebeff6;
-  font-size: 11px
-}
-
-.stat-row span {
-  color: var(--muted)
-}
-
-.stat-row b {
-  font-weight: 600;
-  white-space: nowrap
-}
-
-.bottom-grid {
-  display: grid;
-  grid-template-columns: 1.35fr 1fr;
-  gap: 20px
-}
-
-.peer {
-  display: grid;
-  grid-template-columns: 110px 1fr 35px;
-  gap: 12px;
-  align-items: center;
-  margin: 11px 0;
-  font-size: 10px
-}
-
-.peer button {
-  background: none;
-  border: 0;
-  color: var(--navy);
-  padding: 0;
-  text-align: left;
-  font-size: 10px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden
-}
-
-.bar-track {
-  height: 6px;
-  background: #edf1f8;
-  border-radius: 8px
-}
-
-.bar-track i {
-  display: block;
-  height: 6px;
-  background: #a5a9b0;
-  border-radius: 8px
-}
-
-.peer.selected .bar-track i {
-  background: var(--orange)
-}
-
-.peer.selected button {
-  font-weight: 700
-}
-
-.peer b {
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-  text-align: right
-}
-
-.insight-card {
-  border: 1px solid #dde1e8;
-  border-radius: 8px;
-  background: #e7ebf2;
-  padding: 28px 30px;
-  display: flex;
-  flex-direction: column
-}
-
-.insight-card .eyebrow {
-  color: #787c83
-}
-
-.insight-card h2 {
-  font-size: 29px;
-  margin: 9px 0 16px;
-  line-height: 1.2
-}
-
-.insight-card>p:not(.eyebrow) {
-  font-size: 11px;
-  line-height: 1.9;
-  color: #6c7077;
-  margin: 0 0 20px
-}
-
-.text-button {
-  border: 0;
-  border-top: 1px solid #d1d5dc;
-  padding: 16px 0 0;
-  text-align: left;
-  background: none;
-  font-size: 10px;
-  color: #42464d;
-  margin-top: auto
-}
-
-.text-button span {
-  float: right;
-  font-size: 15px
-}
-
-.notice {
-  border: 1px solid #dadee5;
-  background: #eef2f9;
-  color: #656970;
-  border-radius: 7px;
-  padding: 14px 18px;
-  font-size: 11px;
-  line-height: 1.8;
-  margin-bottom: 22px
-}
-
-.research-grid {
-  display: grid;
-  grid-template-columns: 1.45fr 1fr;
-  gap: 20px;
-  margin-bottom: 20px
-}
-
-.scenario-card {
-  background: #f6faff
-}
-
-.scenario-card label {
-  margin-top: 30px
-}
-
-output {
-  float: right;
-  font-size: 17px;
-  color: var(--teal)
-}
-
-input[type=range] {
-  width: 100%;
-  accent-color: var(--teal);
-  margin: 22px 0 0
-}
-
-.range-labels {
-  display: flex;
-  justify-content: space-between;
-  color: var(--muted);
-  font-size: 9px
-}
-
-.scenario-number {
-  font-size: 49px;
-  line-height: 1.2;
-  letter-spacing: -2px;
-  color: var(--teal);
-  margin: 30px 0 8px
-}
-
-.scenario-detail {
-  font-size: 11px;
-  color: var(--muted)
-}
-
-.scenario-baseline {
-  border-top: 1px solid var(--line);
-  margin-top: 20px;
-  padding-top: 13px;
-  font-size: 11px
-}
-
-.method-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 25px
-}
-
-.method-grid b {
-  font-size: 11px;
-  color: var(--teal)
-}
-
-.method-grid p {
-  font-size: 11px;
-  color: var(--muted);
-  line-height: 1.9
-}
-
-.methodology h2 {
-  margin-bottom: 25px
-}
-
-.timeline {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 3px;
-  margin: 0 0 25px
-}
-
-.timeline>div {
-  border-top: 4px solid #babec5;
-  background: #eaeef5;
-  padding: 17px 20px
-}
-
-.timeline>div:last-child {
-  border-color: var(--orange);
-  background: #eaeef5
-}
-
-.timeline span,
-.timeline small {
-  display: block;
-  font-size: 9px;
-  color: var(--muted)
-}
-
-.timeline span {
-  letter-spacing: 1px
-}
-
-.timeline b {
-  display: block;
-  font-size: 22px;
-  font-weight: 500;
-  margin: 7px 0
-}
-
-.table-wrap {
-  overflow: auto
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 11px;
-  text-align: right
-}
-
-th {
-  font-size: 9px;
-  font-weight: 500;
-  color: var(--muted);
-  border-bottom: 1px solid var(--line);
-  padding: 13px 10px;
-  white-space: nowrap
-}
-
-td {
-  padding: 13px 10px;
-  border-bottom: 1px solid #ecf0f7;
-  white-space: nowrap
-}
-
-th:first-child,
-td:first-child {
-  text-align: left;
-  padding-left: 0
-}
-
-td:last-child,
-th:last-child {
-  padding-right: 0
-}
-
-tr.selected td {
-  font-weight: 600;
-  color: var(--teal)
-}
-
-tbody tr:hover {
-  background: #f5f9ff
-}
-
-.model-tag {
-  font-size: 8px;
-  color: var(--orange);
-  display: block;
-  font-weight: 400
-}
-
-.prediction-row {
-  border-bottom: 1px solid var(--line);
-  padding: 20px 0
-}
-
-.prediction-row>span {
-  font-size: 10px;
-  color: var(--muted)
-}
-
-.prediction-values {
-  display: flex;
-  justify-content: space-between;
-  margin: 10px 0
-}
-
-.prediction-values b {
-  font-size: 22px;
-  font-weight: 500
-}
-
-.prediction-values small {
-  display: block;
-  color: var(--muted);
-  font-size: 9px;
-  font-weight: 400
-}
-
-.prediction-values b:last-child {
-  color: var(--teal)
-}
-
-.prediction-row>small {
-  font-size: 10px;
-  color: var(--muted)
-}
-
-.source-cards {
-  margin-bottom: 23px;
-  gap: 18px
-}
-
-.source-cards a {
-  font-size: 10px
-}
-
-.search-label input {
-  width: 210px
-}
-
-footer {
-  margin-top: 35px;
-  border-top: 1px solid #dde1e8;
-  padding: 20px 0 0;
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  color: #84888f;
-  font-size: 9px
-}
-
-footer a {
-  text-decoration: none
-}
-
-#tooltip {
-  position: fixed;
-  z-index: 20;
-  pointer-events: none;
-  background: var(--navy);
-  color: #fbffff;
-  font-size: 11px;
-  padding: 12px 15px;
-  border-radius: 6px;
-  box-shadow: 0 5px 25px #2b2f3630;
-  max-width: 240px
-}
-
-#tooltip b {
-  display: block;
-  font-size: 12px;
-  margin-bottom: 5px
-}
-
-#tooltip small {
-  color: #c6cad1
-}
-
-.empty {
-  padding: 30px 0;
-  color: var(--muted);
-  font-size: 12px
-}
-
-.skip {
-  position: fixed;
-  top: -60px;
-  left: 20px;
-  z-index: 30;
-  background: white;
-  padding: 10px
-}
-
-.skip:focus {
-  top: 10px
-}
-
-[hidden] {
-  display: none !important
-}
-
-.svg-label {
-  font: 10px var(--font);
-  fill: #82868d
-}
-
-.svg-small {
-  font: 9px var(--font);
-  fill: #82868d
-}
-
-.svg-title {
-  font: 10px var(--font);
-  fill: #74787f
-}
-
-.dot {
-  cursor: pointer;
-  transition: r .15s
-}
-
-.dot:hover,
-.dot:focus {
-  stroke: var(--navy);
-  stroke-width: 2
-}
-
-.svg-grid {
-  stroke: #e9edf4;
-  stroke-width: 1
-}
-
-.svg-axis {
-  stroke: #d0d4db;
-  stroke-width: 1
-}
-
-@media(min-width:1550px) {
-  main {
-    padding: 32px 60px
-  }
-
-  .chart-grid {
-    grid-template-columns: minmax(0, 1.85fr) minmax(330px, 1fr)
-  }
-
-  h1 {
-    font-size: 50px
-  }
-}
-
-@media(max-width:1150px) {
-  .sidebar {
-    width: 200px;
-    padding: 30px 18px
-  }
-
-  main {
-    margin-left: 200px;
-    padding: 25px
-  }
-
-  .brand {
-    font-size: 10px;
-    gap: 9px
-  }
-
-  .nav-item {
-    font-size: 11px;
-    padding: 12px 5px
-  }
-
-  .chart-grid {
-    grid-template-columns: 1.5fr 1fr
-  }
-
-  .card {
-    padding: 18px
-  }
-
-  .kpi {
-    padding: 14px
-  }
-
-  .kpi-value {
-    font-size: 25px
-  }
-
-  .filter-note {
-    display: none
-  }
-
-  h1 {
-    font-size: 37px
-  }
-
-  .edition strong {
-    font-size: 25px
-  }
-
-  .chart-footer span:last-child {
-    margin-left: 0
-  }
-}
-
-@media(max-width:900px) {
-  .sidebar {
-    width: 100%;
-    height: auto;
-    position: relative;
-    padding: 17px 24px;
-    display: block
-  }
-
-  .brand {
-    font-size: 12px
-  }
-
-  .brand-icon {
-    font-size: 32px
-  }
-
-  .rail-label,
-  .rail-note,
-  .rail-bottom {
-    display: none
-  }
-
-  nav {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px
-  }
-
-  .nav-item {
-    width: auto;
-    flex: 1;
-    font-size: 11px;
-    margin: 0;
-    padding: 10px
-  }
-
-  .nav-item span {
-    display: none
-  }
-
-  .nav-item i {
-    display: none
-  }
-
-  main {
-    margin: 0;
-    padding: 24px
-  }
-
-  .chart-grid,
-  .research-grid {
-    grid-template-columns: 1fr 1fr
-  }
-
-  .kpi-grid {
-    gap: 10px
-  }
-
-  .kpi-label {
-    font-size: 9px
-  }
-
-  .kpi-value {
-    font-size: 23px
-  }
-
-  .bottom-grid {
-    grid-template-columns: 1fr 1fr
-  }
-
-  .edition {
-    display: none
-  }
-
-  .page-header {
-    padding-top: 25px
-  }
-
-  .metric-filter select {
-    max-width: 270px
-  }
-
-  #country {
-    width: 170px
-  }
-}
-
-@media(max-width:650px) {
-  main {
-    padding: 18px
-  }
-
-  .sidebar {
-    padding: 17px 18px
-  }
-
-  nav {
-    gap: 3px;
-    overflow: auto
-  }
-
-  .nav-item {
-    font-size: 9px;
-    padding: 10px 6px;
-    white-space: nowrap
-  }
-
-  .brand small {
-    font-size: 7px
-  }
-
-  .topline {
-    font-size: 8px
-  }
-
-  .topline a {
-    font-size: 9px
-  }
-
-  h1 {
-    font-size: 36px
-  }
-
-  .page-header {
-    padding-bottom: 22px
-  }
-
-  .intro {
-    font-size: 11px
-  }
-
-  .filters {
-    flex-wrap: wrap;
-    gap: 12px;
-    padding: 13px
-  }
-
-  .metric-filter {
-    flex-basis: 100%
-  }
-
-  .metric-filter select {
-    max-width: none
-  }
-
-  .filters>label:first-child {
-    flex: 1
-  }
-
-  #country {
-    width: 100%
-  }
-
-  .kpi-grid {
-    grid-template-columns: repeat(2, 1fr)
-  }
-
-  .kpi {
-    min-height: 108px
-  }
-
-  .chart-grid,
-  .bottom-grid,
-  .research-grid,
-  .method-grid {
-    grid-template-columns: 1fr
-  }
-
-  .card {
-    padding: 20px
-  }
-
-  .scatter-card .chart {
-    min-height: 230px
-  }
-
-  .insight-card {
-    padding: 25px
-  }
-
-  .source-cards {
-    gap: 12px
-  }
-
-  .timeline>div {
-    padding: 13px 10px
-  }
-
-  .timeline b {
-    font-size: 18px
-  }
-
-  .timeline span {
-    font-size: 7px
-  }
-
-  .timeline small {
-    font-size: 8px
-  }
-
-  .search-label input {
-    width: 135px
-  }
-
-  .card-heading {
-    gap: 10px
-  }
-
-  footer {
-    flex-wrap: wrap;
-    font-size: 8px
-  }
-
-  .chart-footer {
-    font-size: 8px
-  }
-
-  .chart-footer span:last-child {
-    flex-basis: 100%
-  }
-}
-
-@media(prefers-reduced-motion:reduce) {
-  * {
-    transition: none !important;
-    scroll-behavior: auto !important
-  }
-}
-
-/* Light workspace: consistent surfaces, generous spacing and quiet accents. */
-:root { --radius: 22px; --shadow: 0 4px 24px #34383f04; }
-body { font-family: "Segoe UI Variable", "Segoe UI", Arial, sans-serif; -webkit-font-smoothing: antialiased; }
-.sidebar { width: 250px; padding: 34px 20px 26px; background: #fbffff; color: var(--navy); border-right: 1px solid var(--line); overflow-y: auto; }
-.brand { color: var(--navy); font-size: 13px; letter-spacing: -.2px; gap: 12px; }
-.brand small { color: var(--muted); font-size: 9px; letter-spacing: 1.2px; margin-top: 6px; font-weight: 400; }
-.brand-icon { display: grid; place-content: center; width: 42px; height: 42px; flex-shrink: 0; background: var(--teal); color: #fbffff; border-radius: 14px; font-size: 25px; letter-spacing: -4px; padding-right: 4px; margin: 0; display: block; text-align: center; line-height: 42px; }
-.brand-icon span { color: #e1e5ec; }
-.rail-label { color: #82868d; font-size: 10px; letter-spacing: 1.3px; margin: 48px 14px 16px; }
-.nav-item { border-radius: 13px; color: #6b6f76; font-size: 13px; padding: 14px 12px; gap: 12px; transition: background .18s, color .18s; }
-.nav-item span { display: flex; color: inherit; }
-.nav-item svg { width: 18px; height: 18px; }
-.nav-item.active { background: #eef2f9; color: #5c6067; font-weight: 600; }
-.nav-item.active i { color: var(--teal); }
-.nav-item:hover { background: #f2f6fd; color: var(--teal); }
-.rail-note { margin: 30px 12px 0; padding-top: 22px; border-color: var(--line); color: #53575e; font-size: 12px; }
-.rail-note p { font-size: 11px; color: var(--muted); }
-.status-dot { background: #7e8289; box-shadow: 0 0 0 4px #f0f4fb; margin-right: 9px; }
-.rail-bottom { margin: auto 8px 0; padding-top: 48px; color: var(--muted); }
-.rail-bottom a { color: var(--teal); font-size: 11px; text-decoration: none; }
-.mini-bars { display: none; }
-main { margin-left: 250px; max-width: 1900px; padding: 26px 36px; }
-.topline { border: 0; padding-bottom: 0; font-size: 11px; letter-spacing: 0; color: #74787f; }
-.topline a { background: #fbffff; border: 1px solid var(--line); border-radius: 12px; padding: 10px 15px; font-size: 12px; }
-.topline a:hover { border-color: #c8ccd3; }
-.page-header { padding: 28px 0 26px; gap: 20px; }
-.page-header .eyebrow { color: #7c8087; font-size: 10px; letter-spacing: 1.8px; }
-h1 { font-size: clamp(28px, 2.5vw, 40px); letter-spacing: -1.3px; line-height: 1.2; font-weight: 600; margin-bottom: 12px; }
-h1 span { color: #888c93; }
-.intro { font-size: 13px; line-height: 1.7; max-width: 610px; color: var(--muted); margin: 0; }
-.edition { background: #eef2f9; padding: 16px 20px; border-radius: 18px; text-align: left; }
-.edition > span { font-size: 9px; letter-spacing: 1px; }
-.edition strong { font-size: 24px; margin: 5px 0; }
-.edition small { font-size: 11px; }
-.filters { background: #fbffff; border-color: var(--line); padding: 16px 20px; border-radius: 18px; gap: 18px; margin-bottom: 20px; box-shadow: var(--shadow); }
-label { font-size: 11px; color: #6f737a; font-weight: 500; letter-spacing: 0; }
-select, input[type=search] { background: #f6faff; border-color: #e7ebf2; border-radius: 10px; padding: 10px 30px 10px 12px; font-size: 12px; min-height: 40px; margin-top: 7px; }
-select:hover, input[type=search]:hover { border-color: #c8ccd3; }
+  <style>:root {
+  --paper: #e4e9f0;
+  --card: #f8fafc;
+  --navy: #222b39;
+  --muted: #59697e;
+  --line: #cbd4e0;
+  --teal: #285ed6;
+  --orange: #285ed6;
+  --light: #e1eafb;
+  --font: "Segoe UI Variable", "Segoe UI", Arial, sans-serif;
+}
+* { box-sizing: border-box; }
+body { margin: 0; color: var(--navy); background: var(--paper); font: 14px/1.6 var(--font); -webkit-font-smoothing: antialiased; }
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+a { color: var(--teal); text-underline-offset: 4px; }
+button, a, input, select { -webkit-tap-highlight-color: transparent; }
+:focus-visible { outline: 3px solid #5787ee; outline-offset: 4px; }
+[hidden] { display: none !important; }
+.site-header { min-height: 76px; display: flex; align-items: center; gap: 54px; padding: 0 max(32px, calc((100vw - 1360px) / 2)); background: #252e3c; color: #f4f7fd; }
+.wordmark { display: flex; gap: 5px; color: inherit; text-decoration: none; font-size: 22px; font-weight: 650; letter-spacing: -.8px; white-space: nowrap; }
+.wordmark span { font-weight: 350; color: #a9c1fa; }
+.site-header nav { display: flex; align-self: stretch; gap: 28px; }
+.nav-item { background: none; border: 0; border-bottom: 2px solid transparent; color: #bec9d9; font-size: 12px; padding: 0; white-space: nowrap; }
+.nav-item.active { color: #fff; border-bottom-color: #85aaff; }
+.nav-item:hover { color: #fff; }
+.download-link { margin-left: auto; white-space: nowrap; color: #e8eef9; text-decoration: none; font-size: 12px; border: 1px solid #546177; border-radius: 9px; padding: 8px 13px; }
+.download-link span { margin-left: 10px; }
+.download-link:hover { background: #364357; }
+main { max-width: 1424px; padding: 0 32px 26px; margin: 0 auto; }
+.page-header { display: flex; align-items: center; justify-content: space-between; gap: 36px; padding: 34px 0 28px; }
+.eyebrow { font-size: 11px; color: var(--muted); font-weight: 500; letter-spacing: .25px; margin: 0 0 8px; }
+h1 { font-size: clamp(28px, 2.8vw, 38px); font-weight: 600; letter-spacing: -1.3px; line-height: 1.2; margin: 0 0 10px; }
+.intro { max-width: 720px; margin: 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
+.edition { flex-shrink: 0; padding-left: 24px; border-left: 1px solid #bbc7d7; }
+.edition > span { font-size: 9px; letter-spacing: 1.2px; color: var(--muted); }
+.edition strong { display: block; font-size: 23px; font-weight: 500; letter-spacing: -.7px; margin: 2px 0; }
+.edition strong span { color: #8190a5; }
+.edition small { font-size: 11px; color: var(--muted); }
+.analysis-workspace, .analysis-content, .atlas-layout { min-width: 0; }
+.analysis-controls { background: #d7dfea; border: 1px solid #bcc9da; border-radius: 14px; padding: 15px 20px; margin-bottom: 24px; }
+.filters { display: grid; grid-template-columns: minmax(150px,1fr) 130px minmax(230px,1.5fr); align-items: center; gap: 22px; }
+label { display: block; font-size: 11px; font-weight: 500; color: #4c5e76; }
+select, input[type=search] { display: block; width: 100%; min-width: 0; margin-top: 5px; padding: 9px 28px 9px 12px; border: 1px solid #b6c3d5; border-radius: 8px; background: #f3f6fb; color: #25354c; font-size: 13px; min-height: 40px; }
+select:hover, input[type=search]:hover { border-color: #7899d9; }
 select:disabled { opacity: .55; }
-.filter-note { color: var(--muted); font-size: 11px; }
-.kpi-grid { gap: 16px; margin-bottom: 20px; }
-.kpi { border-radius: var(--radius); padding: 22px; min-height: 144px; box-shadow: var(--shadow); }
-.kpi:first-child { border: 1px solid #e3e7ee; background: #f1f5fc; padding-top: 22px; }
-.kpi-label { font-size: 12px; margin-bottom: 15px; }
-.kpi-value { font-size: 32px; letter-spacing: -1px; font-weight: 600; }
-.kpi-value small { font-size: 11px; }
-.kpi-note { font-size: 11px; margin-top: 10px; color: var(--muted); }
-.card { border-radius: var(--radius); padding: 26px; box-shadow: var(--shadow); }
-.card h2 { font-size: 21px; font-weight: 600; letter-spacing: -.6px; }
-.eyebrow { font-size: 10px; letter-spacing: 1.2px; font-weight: 600; }
-h3 { font-size: 13px; margin-top: 26px; }
-.chart-grid { grid-template-columns: minmax(0, 1.65fr) minmax(300px, 1fr); }
-.pill { background: #f3f7fe; border: 0; border-radius: 20px; padding: 6px 12px; font-size: 11px; }
-.chart-caption { font-size: 11px; line-height: 1.75; }
-.chart-controls { margin: 12px 0; }
-.segmented { border-radius: 12px; padding: 4px; background: #eff3fa; }
-.segmented button { font-size: 12px; padding: 7px 18px; border-radius: 9px; }
-.segmented button.active { color: var(--teal); }
-.chart-footer { font-size: 10px; gap: 12px; border-color: var(--line); }
-.country-code { border-radius: 12px; padding: 10px 12px; background: #f1f5fc; }
-.stat-row { font-size: 12px; padding: 14px 0; border-color: #edf1f8; }
-.peer { font-size: 12px; margin: 17px 0; grid-template-columns: 120px 1fr 40px; }
-.peer button { font-size: 12px; }
-.bar-track, .bar-track i { height: 7px; }
-.bar-track i { background: #babec5; }
-.insight-card { border-radius: var(--radius); padding: 30px; background: #edf1f8; border-color: #e4e8ef; }
-.insight-card h2 { font-size: 30px; font-weight: 500; letter-spacing: -1px; }
-.insight-card > p:not(.eyebrow) { font-size: 13px; color: #6b6f76; }
-.text-button { font-size: 12px; line-height: 1.7; }
-.notice { border-radius: 15px; background: #f3f7fe; border-color: #e4e8ef; font-size: 12px; }
-.scenario-card { background: #f5f9ff; }
-.range-labels, .scenario-detail, .scenario-baseline { font-size: 12px; }
-.method-grid b, .method-grid p { font-size: 12px; }
-.timeline { gap: 14px; }
-.timeline > div { border: 1px solid #e4e8ef; border-radius: 18px; background: #eff3fa; padding: 20px; }
-.timeline > div:last-child { border-color: #e2e6ed; background: #f1f5fc; }
-.timeline span, .timeline small { font-size: 10px; }
-table { font-size: 12px; }
-th { font-size: 11px; background: #f5f9ff; }
-th:first-child, td:first-child { padding-left: 10px; }
-th:last-child, td:last-child { padding-right: 10px; }
-.table-wrap { border-radius: 12px; }
-.model-tag, .prediction-values small { font-size: 10px; }
-.source-cards a, .prediction-row > span, .prediction-row > small { font-size: 12px; }
-footer { font-size: 10px; border-color: var(--line); }
-#tooltip { border-radius: 12px; }
-button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, circle:focus-visible { outline: 3px solid #759bea; }
-@media(min-width:1550px) { main { padding: 30px 52px; } }
-@media(max-width:1200px) { .sidebar { width: 220px; padding-left: 14px; padding-right: 14px; } main { margin-left: 220px; padding: 24px; } .kpi { padding: 18px; } .kpi:first-child { padding-top: 18px; } .kpi-value { font-size: 27px; } .card { padding: 22px; } .chart-grid { grid-template-columns: minmax(0, 1.4fr) minmax(270px, 1fr); } .edition { display: none; } }
-@media(max-width:1000px) { .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .chart-grid, .research-grid, .bottom-grid { grid-template-columns: 1fr; } .filter-note { display: none; } }
-@media(max-width:900px) { .sidebar { position: relative; width: 100%; padding: 20px 24px 14px; border-right: 0; border-bottom: 1px solid var(--line); overflow: visible; } .brand { font-size: 13px; } .brand-icon { font-size: 25px; } nav { gap: 8px; } .nav-item { padding: 12px; justify-content: center; font-size: 12px; } .nav-item span { display: flex; } main { margin: 0; padding: 24px; } .metric-filter select { max-width: none; } .method-grid { grid-template-columns: 1fr; } }
-@media(max-width:650px) { .sidebar { padding: 18px 16px 12px; } nav { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 6px; } .nav-item { justify-content: flex-start; font-size: 11px; padding: 10px; } main { padding: 20px 16px; } .topline { font-size: 10px; } .topline a { font-size: 10px; padding: 8px 10px; } .page-header { padding: 24px 0; } h1 { font-size: 30px; } .intro { font-size: 12px; } .filters { padding: 14px; gap: 12px; } .filters > label { min-width: 0; } .metric-filter { flex-basis: 100%; } select { font-size: 11px; } .kpi-grid { gap: 10px; } .kpi, .kpi:first-child { padding: 16px; min-height: 140px; border-radius: 18px; } .kpi-label { font-size: 11px; min-height: 34px; margin-bottom: 8px; } .kpi-value { font-size: 26px; } .kpi-value small { font-size: 10px; } .kpi-note { font-size: 10px; } .card { padding: 20px; border-radius: 20px; } .card h2 { font-size: 20px; } .chart-footer { font-size: 9px; } .scatter-card .chart { min-height: 0; } .timeline { gap: 6px; } .timeline > div { padding: 12px 9px; border-radius: 12px; } .timeline span { font-size: 7px; } .timeline small { font-size: 9px; } .timeline b { font-size: 17px; } .search-label input { width: 125px; } .peer { grid-template-columns: 105px 1fr 38px; } footer { font-size: 10px; } }
-
-/* Editorial layout: chart first, country dossier alongside, summary below. */
-:root { --paper: #f6faff; --card: #fbffff; --line: #e3e7ee; --radius: 16px; }
-.site-header { max-width: 1536px; margin: 0 auto; padding: 0 48px; min-height: 88px; display: flex; align-items: center; gap: 48px; border-bottom: 1px solid var(--line); }
-.wordmark { display: flex; align-items: baseline; gap: 6px; color: var(--navy); text-decoration: none; font-size: 23px; font-weight: 650; letter-spacing: -1.1px; white-space: nowrap; }
-.wordmark span { font-family: Georgia, serif; font-weight: 400; font-style: italic; color: var(--teal); }
-.site-header nav { display: flex; align-self: stretch; gap: 24px; margin: 0; }
-.site-header .nav-item { position: relative; width: auto; padding: 0; margin: 0; border-radius: 0; background: transparent; font-size: 12px; font-weight: 400; white-space: nowrap; color: #6f737a; }
-.site-header .nav-item.active { color: var(--navy); font-weight: 600; }
-.site-header .nav-item.active::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 2px; background: var(--teal); }
-.site-header .nav-item:hover { color: var(--teal); }
-.download-link { margin-left: auto; font-size: 12px; text-decoration: none; color: var(--navy); white-space: nowrap; }
-.download-link span { margin-left: 12px; }
-main { max-width: 1536px; margin: 0 auto; padding: 0 48px 24px; }
-.page-header { align-items: flex-end; padding: 36px 0 28px; gap: 40px; }
-.page-header .eyebrow { font-size: 9px; letter-spacing: 1.6px; margin-bottom: 12px; }
-h1 { font-family: Georgia, 'Times New Roman', serif; font-size: clamp(32px, 3.2vw, 46px); font-weight: 400; letter-spacing: -1.5px; line-height: 1.15; margin: 0 0 12px; }
-.intro { max-width: 700px; font-size: 13px; line-height: 1.65; }
-.edition { display: block; background: transparent; border-radius: 0; padding: 0 0 3px 28px; border-left: 1px solid var(--line); }
-.edition > span { font-size: 9px; letter-spacing: 1px; }
-.edition strong { font-size: 24px; margin: 3px 0; }
-.edition small { font-size: 10px; }
-.filters { background: transparent; box-shadow: none; border: 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); border-radius: 0; margin-bottom: 28px; padding: 14px 0; gap: 24px; }
-.filters label { display: flex; gap: 10px; align-items: center; font-size: 11px; }
-.filters select { margin: 0; background: #fbffff; border-color: #e0e4eb; border-radius: 9px; min-height: 36px; padding-top: 7px; padding-bottom: 7px; }
-.filters .metric-filter { flex: 0 1 425px; }
-.filters .metric-filter select { width: auto; min-width: 0; flex: 1; }
-#country { width: 165px; }
-#year { min-width: 86px; }
-.filter-note { margin-left: auto; font-size: 10px; }
-.atlas-layout { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 36px; align-items: start; }
-.atlas-main, .country-panel { min-width: 0; }
-.card { box-shadow: none; border-radius: 16px; }
-.scatter-card { padding: 24px 26px 20px; }
-.scatter-card h2 { font-size: 21px; }
-.scatter-card .chart { min-height: 0; }
-.country-panel { border-left: 1px solid var(--line); padding-left: 28px; }
-.country-panel .card { background: transparent; border: 0; border-radius: 0; padding: 0; }
-.profile-card h2 { font-family: Georgia, serif; font-size: 32px; font-weight: 400; letter-spacing: -.7px; margin-bottom: 0; }
-.profile-card .eyebrow { font-size: 9px; color: var(--muted); letter-spacing: 1px; }
-.country-code { background: #ecf0f7; color: #676b72; border-radius: 9px; font-size: 11px; padding: 8px; }
-.stat-row { font-size: 12px; padding: 13px 0; }
-.profile-card h3 { margin-top: 22px; font-size: 12px; }
-.country-panel .peers-card { border-top: 1px solid var(--line); padding-top: 22px; margin-top: 24px; }
-.peers-card h2 { font-size: 17px; }
-.peers-card .chart-caption { font-size: 10px; }
-.peer { grid-template-columns: 100px 1fr 35px; gap: 8px; margin: 13px 0; font-size: 11px; }
-.peer button { font-size: 11px; }
-.summary-strip { margin-top: 26px; }
-.summary-strip > h2 { font-size: 12px; color: var(--muted); font-weight: 500; margin: 0 0 14px; }
-.kpi-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; margin: 0 0 26px; }
-.kpi, .kpi:first-child { min-height: 0; border: 0; border-right: 1px solid var(--line); border-radius: 0; background: transparent; box-shadow: none; padding: 0 16px; }
-.kpi:first-child { padding-left: 0; }
-.kpi:last-child { border-right: 0; padding-right: 0; }
-.kpi-label { font-size: 11px; min-height: 34px; margin: 0 0 7px; }
-.kpi-value { font-size: 28px; line-height: 1.3; font-weight: 500; letter-spacing: -.8px; }
-.kpi-value small { font-size: 10px; }
-.kpi-note { font-size: 10px; margin-top: 6px; }
-.insight-card { display: block; border: 0; border-top: 1px solid var(--line); border-radius: 0; background: transparent; padding: 23px 0 0; }
-.insight-card h2 { font-family: Georgia, serif; font-size: 24px; font-weight: 400; margin: 0 0 10px; }
-.insight-card > p:not(.eyebrow) { font-size: 12px; color: var(--muted); max-width: 740px; margin-bottom: 12px; }
-.text-button { border: 0; padding: 0; color: var(--teal); font-size: 12px; }
-.text-button span { float: none; margin-left: 10px; }
-#forecast .kpi-grid { padding: 18px 0; }
-.research-grid { grid-template-columns: minmax(0, 1.7fr) minmax(280px, 1fr); gap: 28px; }
-.methodology { border: 0; background: transparent; padding: 24px 0; }
-.source-cards { gap: 0; border-bottom: 1px solid var(--line); padding-bottom: 24px; margin-bottom: 28px; }
-.source-cards .card { background: transparent; border: 0; border-radius: 0; border-right: 1px solid var(--line); padding: 8px 26px; }
-.source-cards .card:first-child { padding-left: 0; }
-.source-cards .card:last-child { border-right: 0; }
-footer { margin-top: 42px; }
-@media(min-width:1600px) { .atlas-layout { grid-template-columns: minmax(0, 1fr) 360px; gap: 44px; } }
-@media(max-width:1150px) { .site-header { gap: 28px; padding: 0 28px; } .site-header nav { gap: 18px; } main { padding: 0 28px 24px; } .atlas-layout { grid-template-columns: minmax(0, 1fr) 280px; gap: 24px; } .country-panel { padding-left: 20px; } .filters { gap: 16px; } .filters label { display: block; } .filters select { margin-top: 5px; } .filters .metric-filter select { width: 100%; } .kpi-value { font-size: 24px; } .kpi { padding: 0 12px; } .edition { display: none; } }
-@media(max-width:900px) { .site-header { flex-wrap: wrap; gap: 0; padding-top: 20px; } .site-header nav { order: 3; width: 100%; min-height: 55px; gap: 26px; } .site-header .nav-item { flex: none; } .atlas-layout { grid-template-columns: minmax(0, 1fr) 250px; gap: 20px; } .scatter-card { padding: 20px; } .kpi-grid { grid-template-columns: repeat(2,minmax(0, 1fr)); row-gap: 20px; } .kpi:nth-child(2) { border: 0; } .kpi:nth-child(3) { padding-left: 0; } .country-panel { padding-left: 18px; } .source-cards .card { border-right: 0; border-bottom: 1px solid var(--line); padding: 20px 0; } .source-cards .card:last-child { border: 0; } }
-@media(max-width:700px) { main { padding: 0 18px 20px; } .site-header { padding: 18px 18px 0; } .wordmark { font-size: 22px; } .download-link { font-size: 11px; } .site-header nav { display: flex; overflow-x: auto; gap: 22px; } .site-header .nav-item { font-size: 11px; } .page-header { padding: 28px 0 22px; } h1 { font-size: 34px; } .filters { flex-wrap: wrap; gap: 12px; margin-bottom: 22px; } .filters > label:first-child { flex: 1; } #country { width: 100%; } .filters .metric-filter { flex: 1 0 100%; } .atlas-layout { grid-template-columns: 1fr; gap: 30px; } .country-panel { border: 1px solid var(--line); border-radius: 16px; padding: 22px; background: white; } .kpi, .kpi:first-child { border-radius: 0; min-height: 0; padding: 0 16px; } .kpi:first-child, .kpi:nth-child(3) { padding-left: 0; } .kpi-value { font-size: 28px; } .research-grid { grid-template-columns: 1fr; } .peer { grid-template-columns: 120px 1fr 40px; } }
-
-/* Cool gray, graphite and blue palette and a dedicated left-hand analysis rail. */
-:root { --paper: #dfe4eb; --card: #f6f8fb; --navy: #252c37; --muted: #556171; --line: #b7c1ce; --teal: #285ed6; --orange: #234eaa; --light: #dce5f5; }
-body { background: var(--paper); color: var(--navy); }
-.site-header { max-width: none; min-height: 76px; padding: 0 36px; background: #252c37; border: 0; }
-.wordmark { color: #f4f7fd; }
-.wordmark span { color: #8cafff; }
-.site-header .nav-item { color: #bec8d8; }
-.site-header .nav-item.active, .site-header .nav-item:hover { color: #ffffff; }
-.site-header .nav-item.active::after { background: #8cafff; height: 3px; }
-.download-link { color: #dfe7f4; }
-main { max-width: 1660px; padding: 0 36px 24px; }
-.page-header { padding: 28px 0; align-items: center; }
-h1 { font-family: var(--font); font-size: 32px; font-weight: 550; letter-spacing: -1.2px; }
-.page-header .eyebrow { color: #64686f; }
-.intro { color: var(--muted); font-size: 12px; }
-.edition { border-color: #b1b5bc; }
-.analysis-workspace { display: grid; grid-template-columns: 290px minmax(0,1fr); gap: 24px; align-items: start; }
-.analysis-controls { background: #cbd3df; border: 1px solid #aebaca; padding: 22px; border-radius: 18px; min-width: 0; }
-.analysis-content { min-width: 0; }
-.filters { display: flex; flex-direction: column; gap: 15px; padding: 0; margin: 0; border: 0; align-items: stretch; }
-.filters label, .filters > label:first-child, .filters .metric-filter { display: block; flex: none; min-width: 0; color: #435065; font-size: 11px; }
-.filters select, .filters .metric-filter select, #country, #year { width: 100%; max-width: none; margin-top: 6px; background: #e9eef6; border-color: #b7c1ce; color: #252c37; min-height: 40px; font-size: 12px; }
-.filter-note { display: block; margin: 0; max-width: none; align-self: auto; color: #4c596b; }
-.atlas-layout { display: block; }
-.country-panel { margin-top: 26px; padding: 24px 0 0; border: 0; border-top: 1px solid #adb9ca; background: transparent; border-radius: 0; }
-.profile-card h2 { font-family: var(--font); font-size: 26px; font-weight: 600; }
-.country-panel .eyebrow, .country-panel .chart-caption, .country-panel .stat-row span { color: #4c596b; }
-.country-code { background: #b7c5d9; color: #34445b; }
-.stat-row { border-color: #b7c5d9; font-size: 11px; }
-.country-panel .peers-card { border-color: #adb9ca; }
-.summary-strip { margin: 0 0 22px; background: #c5c9d0; border: 1px solid #b8bcc3; border-radius: 16px; padding: 18px 22px; }
-.summary-strip > h2 { display: none; }
-.summary-strip .kpi-grid { margin: 0; }
-.kpi, .kpi:first-child { border-right-color: #abafb6; }
-.kpi-label, .kpi-note, .kpi-value small { color: #585c63; }
-.kpi-value { font-size: 28px; }
-.card { background: var(--card); border-color: #b7c1ce; }
-.scatter-card { padding: 26px; }
-.scatter-card h2 { font-size: 22px; }
-.pill { background: #e1e8f3; color: #4b5b73; }
-.segmented { background: #dce3ed; }
-.segmented button { color: #526177; }
-.segmented button.active { background: #285ed6; color: #ffffff; box-shadow: none; }
-.chart-footer { border-color: #cbcfd6; }
-.svg-label, .svg-small { fill: #526278; }
-.svg-title { fill: #45566e; }
-.svg-grid { stroke: #c9cdd4; }
-.svg-axis { stroke: #979ba2; }
-.bar-track { background: #b3b7be; }
-.bar-track i { background: #7c91b0; }
-.peer.selected .bar-track i { background: var(--orange); }
-.insight-card { margin-top: 22px; padding: 22px 26px; border: 1px solid #aebfd8; border-radius: 16px; background: #cbd9ee; }
-.insight-card h2 { font-family: var(--font); font-size: 18px; font-weight: 600; letter-spacing: -.4px; }
-.insight-card > p:not(.eyebrow) { color: #415674; }
-.text-button { color: #214fad; }
-.notice { background: #dce6f5; border-color: #b2c3dc; color: #3b5375; }
-.scenario-card { background: #e2e9f5; }
-.timeline > div { background: #d3dce9; border-color: #b3b7be; }
-.timeline > div:last-child { background: #c6d6f2; border-color: #a6bce1; }
-select, input[type=search] { background: #edf1f7; border-color: #a3a7ae; }
-th { background: #e0e7f1; color: #5a5e65; }
-td { border-color: #cdd1d8; }
-tbody tr:hover { background: #e5edf9; }
-.source-cards .card { border-color: var(--line); }
-.research-grid, #forecast .chart-grid { grid-template-columns: minmax(0,1fr); gap: 20px; }
-#forecast .kpi-grid { grid-template-columns: repeat(2,minmax(0,1fr)); row-gap: 20px; }
-footer { border-color: #b3b7be; color: #5f636a; }
-@media(max-width:1150px) { .site-header { padding: 0 24px; gap: 24px; } main { padding: 0 24px 24px; } .analysis-workspace { grid-template-columns: 260px minmax(0,1fr); gap: 20px; } .analysis-controls { padding: 18px; } .kpi-grid { grid-template-columns: repeat(2,minmax(0,1fr)); row-gap: 18px; } .kpi:nth-child(2) { border: 0; } .kpi:nth-child(3) { padding-left: 0; } }
-@media(max-width:900px) { .site-header { padding-top: 18px; } .analysis-workspace { grid-template-columns: 235px minmax(0,1fr); gap: 16px; } .analysis-controls { padding: 16px; } .scatter-card { padding: 20px; } h1 { font-size: 29px; } }
-@media(max-width:700px) { .site-header { padding: 18px 18px 0; } main { padding: 0 16px 20px; } .analysis-workspace { display: flex; flex-direction: column; } .analysis-controls, .analysis-content { width: 100%; } .filters { display: grid; grid-template-columns: minmax(0,1fr) 90px; gap: 12px; } .filters .metric-filter, .filter-note { grid-column: 1 / -1; } .country-panel { padding-top: 20px; } h1 { font-size: 28px; } .summary-strip { padding: 18px; margin-top: 2px; } .kpi-value { font-size: 26px; } .country-panel .small-chart { max-width: 400px; } .insight-card { padding: 20px; } }
-@media(max-width:700px) {
-  .analysis-controls { display: contents; }
-  .analysis-controls .filters { order: 0; width: 100%; background: #cbd3df; border: 1px solid #aebaca; border-radius: 16px; padding: 16px; }
-  .analysis-content { order: 1; }
-  #country-dock { order: 2; width: 100%; }
-  #country-dock:has(.country-panel[hidden]) { display: none; }
-  .country-panel { margin: 4px 0 0; padding: 20px; border: 1px solid #aebaca; border-radius: 16px; background: #cbd3df; }
-}
-.map-gradient { background: linear-gradient(to right, #c4d6f0, #2856a0); }
-
-/* Summary has its own hierarchy, independent of forecast KPI cards. */
-.summary-strip { background: transparent; border: 0; border-radius: 0; padding: 4px 2px 0; margin: 0 0 24px; }
-.summary-context { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; color: #505e72; font-size: 11px; line-height: 1.5; }
-.summary-context > span:first-child { color: #38475d; font-weight: 600; }
-.summary-values { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 32px; padding: 20px 0 18px; }
-.summary-label { display: block; color: #38475d; font-size: 12px; }
-.summary-number { margin: 5px 0 3px; color: #252c37; font-size: 38px; font-weight: 500; line-height: 1.15; letter-spacing: -1.4px; font-variant-numeric: tabular-nums; }
-.summary-number > span { display: inline-block; color: #505e72; font-size: 12px; font-weight: 400; letter-spacing: 0; white-space: nowrap; }
-.summary-metric > small { color: #505e72; font-size: 10px; }
-.summary-comparison { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 16px; border-top: 1px solid #b3b7be; padding-top: 12px; font-size: 12px; color: #465671; line-height: 1.7; }
-.summary-country { color: #252c37; font-weight: 600; }
-.summary-comparison strong { color: #214fad; font-weight: 600; }
-@media(max-width:900px) { .summary-values { gap: 18px; } .summary-number { font-size: 32px; } .summary-number > span { font-size: 11px; } }
-@media(max-width:400px) { .summary-values { gap: 12px; } .summary-number { font-size: 30px; } .summary-number > span { display: block; margin-top: 5px; } .summary-label { font-size: 11px; } }
-/* Match scatter legends to the cohort and selected-country colors. */
+.filter-note { color: #51637c; font-size: 11px; line-height: 1.6; margin: 16px 0 0; }
+.atlas-main { display: grid; grid-template-columns: minmax(0,1fr) 248px; gap: 24px; align-items: start; }
+.card { background: var(--card); border: 1px solid #ccd6e3; border-radius: 18px; padding: 26px; min-width: 0; box-shadow: 0 3px 12px #24395404; }
+h2 { font-size: 21px; font-weight: 600; letter-spacing: -.5px; line-height: 1.3; margin: 0 0 10px; }
+h3 { font-size: 13px; font-weight: 600; margin: 22px 0 0; }
+.card-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.card-heading h2 { margin-bottom: 0; }
+.pill { font-size: 11px; color: #456086; background: #e7edf7; border-radius: 7px; padding: 5px 10px; white-space: nowrap; }
+.chart-controls { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin: 17px 0 12px; }
+.segmented { display: inline-flex; padding: 3px; gap: 3px; border-radius: 9px; background: #e2e8f2; }
+.segmented button { border: 0; background: transparent; border-radius: 7px; padding: 7px 17px; color: #576c89; font-size: 12px; }
+.segmented button.active { background: #285ed6; color: white; }
+#map-label { display: flex; gap: 8px; align-items: center; font-size: 11px; }
+#map-variable { margin: 0; font-size: 11px; min-height: 32px; padding: 6px 22px 6px 8px; width: auto; }
+.chart-caption { color: var(--muted); font-size: 11px; line-height: 1.8; margin: 10px 0; }
+.chart { margin-top: 14px; }
+.chart svg { width: 100%; height: auto; display: block; overflow: visible; }
+.chart-footer { display: flex; flex-wrap: wrap; gap: 10px 18px; padding-top: 14px; margin-top: 10px; border-top: 1px solid #dbe2ec; color: var(--muted); font-size: 10px; }
+.chart-footer span:last-child { margin-left: auto; }
+.legend-dot { display: inline-block; width: 7px; height: 7px; margin-right: 5px; border-radius: 50%; }
 .legend-dot.teal { background: #7188ac; }
 .legend-dot.orange { background: #285ed6; }
+.map-gradient { display: inline-block; flex: 1; min-width: 60px; max-width: 120px; height: 7px; border-radius: 6px; align-self: center; background: linear-gradient(to right,#c4d6f0,#2856a0); }
+.summary-strip { padding: 8px 2px; }
+.summary-context { display: flex; flex-direction: column; gap: 5px; font-size: 11px; color: var(--muted); }
+.summary-context > span:first-child { font-size: 14px; font-weight: 600; color: #30415b; }
+.summary-values { display: grid; gap: 22px; padding: 25px 0; }
+.summary-metric { padding-bottom: 22px; border-bottom: 1px solid #becbdd; }
+.summary-metric:last-child { padding-bottom: 0; border: 0; }
+.summary-label { display: block; font-size: 12px; color: #4c5e76; }
+.summary-number { font-size: 37px; line-height: 1.2; font-weight: 500; letter-spacing: -1.3px; margin: 7px 0 5px; font-variant-numeric: tabular-nums; }
+.summary-number > span { font-size: 11px; color: #576c88; letter-spacing: 0; display: inline-block; white-space: nowrap; font-weight: 400; }
+.summary-metric > small { font-size: 10px; color: var(--muted); }
+.summary-comparison { border-top: 1px solid #becbdd; padding-top: 18px; display: grid; gap: 7px; font-size: 12px; color: #51637e; line-height: 1.8; }
+.summary-country { color: #283b5a; font-size: 14px; font-weight: 600; }
+.summary-comparison strong { font-weight: 600; color: #2454b8; }
+.insight-card { grid-column: 1 / -1; display: grid; grid-template-columns: 190px minmax(0,1fr); gap: 8px 28px; border-left: 3px solid #789ce6; padding: 6px 0 6px 22px; }
+.insight-card h2 { font-size: 15px; margin: 0; padding-top: 2px; letter-spacing: -.2px; }
+.insight-card > p { color: #526580; font-size: 12px; line-height: 1.8; margin: 0; }
+.text-button { grid-column: 2; width: fit-content; border: 0; padding: 0; color: #2858ba; background: transparent; text-align: left; font-size: 12px; }
+.text-button span { margin-left: 8px; }
+#country-dock { grid-column: 1 / -1; min-width: 0; }
+.country-panel { display: grid; grid-template-columns: minmax(0,1.2fr) minmax(0,1fr); gap: 24px; }
+.profile-card .eyebrow { font-size: 11px; }
+.profile-card h2 { font-size: 25px; }
+.country-code { font-size: 11px; letter-spacing: 1px; color: #6e819d; }
+.stat-row { display: flex; gap: 16px; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #dee5ef; font-size: 12px; }
+.stat-row span { color: var(--muted); }
+.stat-row b { font-weight: 600; white-space: nowrap; }
+.peer { display: grid; grid-template-columns: 120px minmax(0,1fr) 38px; align-items: center; gap: 12px; margin: 19px 0; font-size: 12px; }
+.peer button { border: 0; background: transparent; padding: 0; text-align: left; color: #364963; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.peer.selected button { color: #285ed6; font-weight: 600; }
+.peer b { text-align: right; font-weight: 500; font-variant-numeric: tabular-nums; }
+.bar-track { background: #e0e7f1; height: 7px; border-radius: 5px; }
+.bar-track i { display: block; height: 100%; background: #91a7ca; border-radius: inherit; }
 .peer.selected .bar-track i { background: #285ed6; }
-
-/* Data-explorer controls: plain sections separate inputs from results. */
-.analysis-workspace { grid-template-columns: 236px minmax(0, 1fr); gap: 30px; }
-.analysis-controls { background: transparent; border: 0; border-right: 1px solid #b7c1ce; border-radius: 0; padding: 0 24px 24px 0; }
-.controls-heading { padding: 1px 0 20px; border-bottom: 2px solid #43536a; }
-.controls-heading h2 { font-size: 16px; font-weight: 600; letter-spacing: -.3px; margin: 0 0 5px; }
-.controls-heading p { color: #556171; font-size: 11px; line-height: 1.5; margin: 0; }
-.analysis-controls .filters { display: block; padding: 0; background: transparent; border: 0; border-radius: 0; margin: 0; }
-.filters .filter-field, .filters > .filter-field:first-child, .filters .metric-filter { display: block; padding: 18px 0; border-bottom: 1px solid #b7c1ce; font-size: 12px; font-weight: 600; color: #344155; }
-.filters select, .filters .metric-filter select, #country, #year { width: 100%; min-width: 0; margin-top: 9px; border: 1px solid #9baabd; border-radius: 5px; background: #f2f5f9; color: #252c37; font-size: 12px; font-weight: 400; padding: 9px 24px 9px 10px; min-height: 38px; }
-.filters select:hover { border-color: #285ed6; }
-.field-help { display: block; margin-top: 8px; font-size: 10px; font-weight: 400; color: #58677b; line-height: 1.6; }
-.filters .filter-note { padding: 14px 0 0; margin: 0; font-size: 10px; color: #58677b; line-height: 1.6; }
-#country-dock { margin-top: 30px; }
-#country-dock .country-panel { display: grid; grid-template-columns: minmax(0,1.15fr) minmax(0,1fr); gap: 32px; padding: 26px 0 0; margin: 0; border: 0; border-top: 1px solid #aebaca; border-radius: 0; background: transparent; }
-#country-dock .profile-card, #country-dock .peers-card { margin: 0; padding: 0; border: 0; background: transparent; }
-#country-dock .peers-card { border-left: 1px solid #b7c1ce; padding-left: 28px; }
-#country-dock .profile-card .eyebrow { font-size: 11px; text-transform: none; letter-spacing: 0; font-weight: 400; }
-#country-dock .profile-card h2 { font-size: 23px; }
-#country-dock .country-code { border: 0; border-radius: 0; background: transparent; padding: 0; color: #5b6980; font-size: 11px; }
-#country-dock .stat-row { font-size: 12px; padding: 11px 0; }
-#country-dock .peers-card h2 { font-size: 18px; }
-#country-dock .peer { grid-template-columns: 100px minmax(0,1fr) 36px; }
-@media(max-width:1150px) { .analysis-workspace { grid-template-columns: 210px minmax(0,1fr); gap: 24px; } .analysis-controls { padding-right: 20px; } #country-dock .country-panel { gap: 24px; } #country-dock .peers-card { padding-left: 22px; } }
-@media(max-width:900px) { #country-dock .country-panel { grid-template-columns: 1fr; } #country-dock .peers-card { padding: 22px 0 0; border-left: 0; border-top: 1px solid #b7c1ce; } }
-@media(max-width:700px) {
-  .analysis-controls { display: block; width: 100%; padding: 0 0 20px; border: 0; }
-  .controls-heading { padding-bottom: 12px; }
-  .controls-heading p { display: none; }
-  .analysis-controls .filters { display: grid; grid-template-columns: minmax(0,1fr) 110px; column-gap: 18px; width: 100%; }
-  .filters .filter-field, .filters > .filter-field:first-child, .filters .metric-filter { padding: 14px 0; }
-  .filters .metric-filter { grid-column: 1 / -1; }
-  .filters .filter-note { grid-column: 1 / -1; padding-top: 0; }
-  #country-dock .country-panel { padding-top: 22px; }
+.notice { background: #d8e3f5; border: 1px solid #b9cce8; border-radius: 12px; padding: 15px 20px; color: #405777; font-size: 12px; line-height: 1.8; margin-bottom: 22px; }
+.research-grid, .chart-grid { display: grid; grid-template-columns: minmax(0,1.5fr) minmax(0,1fr); gap: 24px; margin-bottom: 24px; }
+.scenario-card { background: #eaf0fa; }
+.scenario-card label { margin-top: 25px; }
+output { float: right; color: #285ed6; font-size: 17px; }
+input[type=range] { width: 100%; margin: 24px 0 0; accent-color: #285ed6; }
+.range-labels { display: flex; justify-content: space-between; color: var(--muted); font-size: 11px; }
+.scenario-number { font-size: 46px; font-weight: 500; letter-spacing: -1.6px; color: #285ed6; margin: 24px 0 8px; }
+.scenario-detail, .scenario-baseline { color: var(--muted); font-size: 12px; }
+.scenario-baseline { border-top: 1px solid var(--line); padding-top: 15px; margin-top: 20px; }
+.method-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 24px; }
+.method-grid b { font-size: 12px; font-weight: 600; color: #3f5b85; }
+.method-grid p { font-size: 12px; color: var(--muted); line-height: 1.9; }
+.methodology h2 { margin-bottom: 24px; }
+.timeline { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 16px; margin-bottom: 24px; }
+.timeline > div { background: #d3ddea; border-radius: 12px; padding: 18px 22px; border: 1px solid #c0ccdd; }
+.timeline > div:last-child { background: #cbdaf4; border-color: #abc3eb; }
+.timeline span, .timeline small { display: block; color: #526986; font-size: 10px; }
+.timeline b { display: block; font-size: 23px; font-weight: 500; margin: 4px 0; }
+.kpi-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 24px; margin-bottom: 24px; }
+.kpi { padding: 16px 0; border-bottom: 1px solid #b9c7da; }
+.kpi-label, .kpi-note { font-size: 11px; color: var(--muted); margin: 0; }
+.kpi-value { font-size: 30px; letter-spacing: -.8px; font-variant-numeric: tabular-nums; margin: 6px 0; }
+.kpi-value small { font-size: 12px; letter-spacing: 0; color: var(--muted); }
+.table-wrap { overflow: auto; border-radius: 8px; }
+table { width: 100%; border-collapse: collapse; text-align: right; font-size: 12px; }
+th { background: #e8eef7; color: #526987; font-size: 11px; font-weight: 500; }
+th, td { padding: 13px 12px; border-bottom: 1px solid #dce4ef; white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; }
+tbody tr:hover { background: #edf2fa; }
+tr.selected td { color: #285ed6; font-weight: 600; }
+.model-tag { font-size: 10px; display: block; font-weight: 400; color: #285ed6; }
+.prediction-row { border-bottom: 1px solid var(--line); padding: 18px 0; }
+.prediction-row > span, .prediction-row > small { color: var(--muted); font-size: 11px; }
+.prediction-values { display: flex; justify-content: space-between; gap: 12px; margin: 10px 0; }
+.prediction-values b { font-size: 24px; font-weight: 500; }
+.prediction-values small { display: block; font-size: 10px; color: var(--muted); font-weight: 400; }
+.prediction-values b:last-child { color: #285ed6; }
+.source-cards { margin-bottom: 24px; }
+.source-cards a { font-size: 12px; }
+.search-label input { width: 200px; }
+footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px 24px; margin-top: 35px; border-top: 1px solid #c1cddd; padding-top: 18px; color: #657691; font-size: 10px; }
+footer a { text-decoration: none; }
+#tooltip { position: fixed; z-index: 20; pointer-events: none; background: #25364e; color: #fff; border-radius: 10px; padding: 12px 16px; font-size: 12px; max-width: 260px; box-shadow: 0 5px 20px #23385625; }
+#tooltip b { display: block; margin-bottom: 4px; }
+#tooltip small { color: #c2d3ee; }
+.empty { padding: 25px 0; color: var(--muted); font-size: 12px; }
+.skip { position: fixed; top: -80px; left: 15px; z-index: 30; padding: 10px; background: #fff; }
+.skip:focus { top: 10px; }
+.svg-label { font: 10px var(--font); fill: #586d8b; }
+.svg-small { font: 9px var(--font); fill: #586d8b; }
+.svg-title { font: 10px var(--font); fill: #435c81; }
+.svg-grid { stroke: #e0e7f1; stroke-width: 1; }
+.svg-axis { stroke: #b8c7dd; stroke-width: 1; }
+.dot, .map-country { cursor: pointer; }
+.dot:hover, .dot:focus { stroke: #25364e; stroke-width: 2; }
+.map-country:hover, .map-country:focus-visible { stroke: #25364e; stroke-width: 1; }
+@media(max-width:1100px) {
+ .site-header { gap: 26px; padding: 0 24px; } .site-header nav { gap: 20px; }
+ main { padding: 0 24px 24px; } .edition { display: none; }
+ .filters { grid-template-columns: minmax(140px,1fr) 110px minmax(200px,1.4fr); gap: 18px; }
+ .filter-note { grid-column: 1 / -1; margin: 0; }
+ .atlas-main { grid-template-columns: minmax(0,1fr) 210px; gap: 20px; }
+ .card { padding: 22px; } .summary-number { font-size: 32px; }
+ .summary-number > span { font-size: 10px; } .chart-footer span:last-child { margin-left: 0; }
+ .research-grid, .chart-grid { grid-template-columns: 1fr; }
 }
+@media(max-width:800px) {
+ .site-header { flex-wrap: wrap; gap: 0; padding-top: 18px; }
+ .site-header nav { order: 3; width: 100%; min-height: 55px; gap: 26px; overflow-x: auto; }
+ .download-link { margin-left: auto; } .nav-item { flex-shrink: 0; }
+ .page-header { padding: 26px 0; }
+ .atlas-main { grid-template-columns: 1fr; }
+ .summary-strip { padding: 4px 0; }
+ .summary-context { flex-direction: row; flex-wrap: wrap; justify-content: space-between; }
+ .summary-values { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 24px; padding: 20px 0; }
+ .summary-metric { padding: 0; border: 0; }
+ .summary-comparison { display: flex; gap: 12px; flex-wrap: wrap; padding-top: 12px; }
+ .country-panel { grid-template-columns: 1fr; }
+ .insight-card { grid-template-columns: 1fr; gap: 8px; }
+ .text-button { grid-column: 1; }
+ .method-grid { grid-template-columns: 1fr; }
+ .kpi-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+@media(max-width:560px) {
+ .site-header { padding: 16px 16px 0; } .wordmark { font-size: 20px; }
+ .download-link { font-size: 10px; padding: 7px 10px; }
+ .site-header nav { gap: 22px; } .nav-item { font-size: 11px; }
+ main { padding: 0 16px 20px; } h1 { font-size: 29px; }
+ .intro { font-size: 12px; } .page-header .eyebrow { font-size: 10px; }
+ .analysis-controls { padding: 14px; margin-bottom: 18px; }
+ .filters { grid-template-columns: minmax(0,1fr) 95px; gap: 12px; }
+ .metric-filter { grid-column: 1 / -1; } select { font-size: 12px; }
+ .filter-note { font-size: 10px; }
+ .card { padding: 18px; border-radius: 14px; } h2 { font-size: 19px; }
+ .summary-number { font-size: 32px; } .summary-number > span { display: block; margin-top: 5px; }
+ .summary-context { font-size: 10px; } .summary-context > span:first-child { font-size: 12px; }
+ .timeline { gap: 7px; } .timeline > div { padding: 12px 9px; }
+ .timeline b { font-size: 17px; } .timeline span { font-size: 7px; } .timeline small { font-size: 9px; }
+ .peer { grid-template-columns: 108px minmax(0,1fr) 35px; gap: 10px; }
+ .search-label input { width: 130px; } .chart-controls { gap: 8px; }
+ #map-label { gap: 4px; font-size: 9px; } #map-variable { max-width: 108px; font-size: 10px; }
+}
+@media(prefers-reduced-motion:reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+
+/* Optional context stays available without crowding the dashboard. */
+.page-header h1 { margin-bottom: 0; }
+.edition strong { margin: 0; }
+.data-detail { color: var(--muted); font-size: 12px; margin: 8px 0 16px; }
+.data-detail summary { cursor: pointer; width: fit-content; color: #4c6385; }
+.data-detail summary:hover { color: var(--teal); }
+.data-detail p { margin: 10px 0 0; line-height: 1.8; }
+
+.metric-explanation { display: block; margin-top: 6px; font-size: 11px; line-height: 1.65; color: var(--muted); font-weight: 400; letter-spacing: 0; }
+.summary-metric > .metric-explanation { font-size: 11px; }
+.stat-row .metric-explanation { margin-top: 3px; max-width: 290px; }
 </style>
   
 </head>
@@ -1646,17 +241,16 @@ footer { border-color: #b3b7be; color: #5f636a; }
   </header>
 
   <main id="content">
-    <header class="page-header"><div><p class="eyebrow">ЭКОНОМИКА ЗДРАВООХРАНЕНИЯ</p><h1 id="page-title">Здравоохранение в цифрах</h1><p id="page-description" class="intro">Расходы, смертность и различия между странами на открытых данных ОЭСР, ВОЗ и Всемирного банка.</p></div><div class="edition"><span>ПЕРИОД ИССЛЕДОВАНИЯ</span><strong>2010<span> - </span>2023</strong><small id="edition-count">Официальная статистика</small></div></header>
+    <header class="page-header"><div><h1 id="page-title">Здравоохранение в цифрах</h1></div><div class="edition"><strong>2010<span> - </span>2023</strong></div></header>
     <div id="loading" role="status" class="notice">Загрузка исследовательского среза…</div>
     <div id="application" hidden>
       <div class="analysis-workspace">
 <aside class="analysis-controls" aria-label="Настройки анализа">
-  <div class="controls-heading"><h2>Настройки среза</h2><p>Изменения применяются сразу</p></div>
+
   <section class="filters" aria-label="Фильтры данных">
-    <label class="filter-field">Страна<select id="country"></select><span class="field-help">Выделена на графике синим</span></label>
+    <label class="filter-field">Страна<select id="country"></select></label>
     <label class="filter-field">Год наблюдения<select id="year"></select></label>
-    <label class="filter-field metric-filter">Категория смертности<select id="metric"><option value="treatable">Своевременное лечение</option><option value="preventable">Профилактика</option><option value="avoidable">Вся предотвратимая</option></select><span class="field-help">На 100 000 человек, с учётом возраста</span></label>
-    <p class="filter-note" id="filter-note"></p>
+    <label class="filter-field metric-filter">Категория смертности<select id="metric"><option value="treatable">Своевременное лечение</option><option value="preventable">Профилактика</option><option value="avoidable">Вся предотвратимая</option></select></label>
   </section>
 </aside>
 <div class="analysis-content">
@@ -1664,38 +258,39 @@ footer { border-color: #b3b7be; color: #5f636a; }
       <section id="overview" class="view active" aria-label="Обзор стран">
         <div class="atlas-layout">
           <div class="atlas-main">
+
+            <article class="card scatter-card"><div class="card-heading"><div><h2>Сравнение стран</h2></div><span class="pill" id="scatter-year"></span></div><div class="chart-controls"><div class="segmented" aria-label="Вид графика"><button data-chart="scatter" class="active" aria-pressed="true">Связь</button><button data-chart="map" aria-pressed="false">Карта</button></div><label id="map-label" hidden>Цвет карты<select id="map-variable"><option value="mortality">Смертность</option><option value="spend_ppp">Расходы</option></select></label></div><p class="chart-caption" id="scatter-caption">Каждая точка — страна.</p><div id="scatter" class="chart"></div><div class="chart-footer" id="scatter-legend"></div><details class="data-detail"><summary>Как читать график и карту</summary><p>График показывает связь расходов на человека и смертности. Шкала расходов логарифмическая: она отражает различия в разах. Синяя точка обозначает выбранную страну.</p><p>На карте темнее — выше выбранный показатель; серый цвет — нет данных. Нажмите на страну, чтобы открыть её профиль.</p></details></article>
             <section class="summary-strip" aria-label="Сводка по выбранному году"><div id="kpis" aria-live="polite"></div></section>
-            <article class="card scatter-card"><div class="card-heading"><div><h2>Сравнение стран</h2></div><span class="pill" id="scatter-year"></span></div><div class="chart-controls"><div class="segmented" aria-label="Вид графика"><button data-chart="scatter" class="active" aria-pressed="true">Связь</button><button data-chart="map" aria-pressed="false">Карта</button></div><label id="map-label" hidden>Цвет карты<select id="map-variable"><option value="mortality">Смертность</option><option value="spend_ppp">Расходы</option></select></label></div><p class="chart-caption" id="scatter-caption">Каждая точка - страна. Нажмите на точку, чтобы открыть её профиль.</p><div id="scatter" class="chart"></div><div class="chart-footer" id="scatter-legend"></div></article>
 
             <article class="insight-card"><h2>Как читать эту связь</h2><p id="insight"></p><button class="text-button" data-jump="research">Проверить связь с учётом других факторов <span>↗</span></button></article>
             <div id="country-dock"></div>
           </div>
           <aside class="country-panel" aria-label="Страна и её ближайшие аналоги">
-            <article class="card profile-card"><div class="card-heading"><div><p class="eyebrow">Профиль страны</p><h2 id="profile-name"></h2></div><span class="country-code" id="profile-code"></span></div><div id="profile-stats"></div><h3>Смертность по годам</h3><div id="trend" class="chart small-chart"></div><p class="chart-caption">На 100 000, с учётом возраста. Пропуски разрывают линию.</p></article>
-            <article class="card peers-card"><div class="card-heading"><div><h2>Ближайшие страны</h2></div></div><p class="chart-caption">Близость по логарифму реального ВВП на человека и доле населения 65+. Оба признака стандартизованы в выбранном году.</p><div id="peers"></div></article>
+            <article class="card profile-card"><div class="card-heading"><div><h2 id="profile-name"></h2></div><span class="country-code" id="profile-code"></span></div><div id="profile-stats"></div><h3>Смертность по годам</h3><div id="trend" class="chart small-chart"></div><p class="chart-caption">На 100 000 · с учётом возраста</p></article>
+            <article class="card peers-card"><div class="card-heading"><div><h2>Ближайшие страны</h2></div></div><details class="data-detail"><summary>Как подобраны страны</summary><p>Страны похожи по доходу на человека и доле жителей 65+. Значения показывают выбранную смертность на 100 000, а не степень похожести стран. Для подбора используются стандартизованные логарифм реального ВВП на человека и доля населения 65+.</p></details><div id="peers"></div></article>
           </aside>
         </div>
       </section>
 
       <section id="research" class="view" aria-label="Связь и сценарии" hidden>
         <div class="notice">Модели описывают статистическую связь. Они не оценивают причинный эффект бюджетного решения. Выбор страны и года задаёт точку отсчёта сценария. Коэффициент общий для всей выборки.</div>
-        <div class="research-grid"><article class="card"><p class="eyebrow">ПАНЕЛЬНАЯ МОДЕЛЬ</p><h2>Что меняется после учёта различий</h2><p class="chart-caption">Связь роста расходов на 10% со смертностью, которую можно снизить лечением. Полосы показывают 95% доверительные интервалы.</p><div id="forest" class="chart"></div><p class="chart-caption">Стандартные ошибки учитывают группы наблюдений по странам. Признаки расходов, дохода, возраста и платежей входят с лагом в один год.</p></article>
-        <article class="card scenario-card"><p class="eyebrow">СЦЕНАРИЙ ПО МОДЕЛИ</p><h2>Если расходы изменятся</h2><label for="spend-change">Изменение реальных расходов <output id="change-label">+10%</output></label><input id="spend-change" type="range" min="-20" max="20" step="1" value="10"><div class="range-labels"><span>-20%</span><span>0%</span><span>+20%</span></div><div id="scenario-result" aria-live="polite"></div><p class="chart-caption">Интервал отражает неопределённость коэффициента. Это не интервал прогноза для отдельной страны. Остальные факторы условно постоянны.</p></article></div>
-        <article class="card methodology"><p class="eyebrow">КАК УСТРОЕНА ОЦЕНКА</p><h2>Один вопрос, пять проверок</h2><div class="method-grid"><div><b>01 / Внутри страны</b><p>Эффекты стран учитывают постоянные различия. Эффекты лет учитывают общие годовые сдвиги.</p></div><div><b>02 / Устойчивость</b><p>Отдельные оценки до 2020 года, для стран с высоким доходом и с линейными трендами стран.</p></div><div><b>03 / Сопоставимые цены</b><p>Прокси реальных расходов = доля расходов в ВВП × реальный ВВП по ППС. Отраслевой индекс медицинских цен здесь не используется.</p></div></div></article>
+        <div class="research-grid"><article class="card"><h2>Что меняется после учёта различий</h2><p class="chart-caption">Связь роста расходов на 10% со смертностью, которую можно снизить лечением. Полосы показывают 95% доверительные интервалы.</p><div id="forest" class="chart"></div><p class="chart-caption">Стандартные ошибки учитывают группы наблюдений по странам. Признаки расходов, дохода, возраста и платежей входят с лагом в один год.</p></article>
+        <article class="card scenario-card"><h2>Если расходы изменятся</h2><label for="spend-change">Изменение реальных расходов <output id="change-label">+10%</output></label><input id="spend-change" type="range" min="-20" max="20" step="1" value="10"><div class="range-labels"><span>-20%</span><span>0%</span><span>+20%</span></div><div id="scenario-result" aria-live="polite"></div><details class="data-detail"><summary>Что означают проценты?</summary><p id="scenario-help"></p></details><p class="chart-caption">Интервал отражает неопределённость коэффициента. Это не интервал прогноза для отдельной страны. Остальные факторы условно постоянны.</p></article></div>
+        <article class="card methodology"><h2>Один вопрос, пять проверок</h2><div class="method-grid"><div><b>01 / Внутри страны</b><p>Эффекты стран учитывают постоянные различия. Эффекты лет учитывают общие годовые сдвиги.</p></div><div><b>02 / Устойчивость</b><p>Отдельные оценки до 2020 года, для стран с высоким доходом и с линейными трендами стран.</p></div><div><b>03 / Сопоставимые цены</b><p>Прокси реальных расходов = доля расходов в ВВП × реальный ВВП по ППС. Отраслевой индекс медицинских цен здесь не используется.</p></div></div></article>
       </section>
 
       <section id="forecast" class="view" aria-label="Проверка прогноза" hidden>
         <div class="notice">Прогноз относится к смертности, которую можно снизить лечением. Это ретроспективная проверка на год вперёд. Она предполагает, что показатели прошлого года уже доступны.</div>
         <div class="timeline"><div><span>ОБУЧЕНИЕ</span><b>2011-2019</b><small>Валидация: 2016-2019</small></div><div><span>КАЛИБРОВКА</span><b>2020-2021</b><small>Только ширина интервала</small></div><div><span>НЕЗАВИСИМЫЙ ТЕСТ</span><b>2022-2023</b><small>Без выбора модели по тесту</small></div></div>
-        <div class="kpi-grid" id="model-kpis"></div><div class="chart-grid"><article class="card"><p class="eyebrow">СРАВНЕНИЕ МОДЕЛЕЙ</p><h2>Сильная база: значение прошлого года</h2><p class="chart-caption">MAE - средняя абсолютная ошибка на 100 000. Меньше лучше. Выбор модели опирается только на временную валидацию.</p><div class="table-wrap"><table><thead><tr><th>Модель</th><th>Валидация</th><th>Тест</th><th>Покрытие</th></tr></thead><tbody id="model-table"></tbody></table></div></article><article class="card"><p class="eyebrow">ФАКТ И ПРОГНОЗ</p><h2 id="prediction-country"></h2><div id="predictions"></div><p class="chart-caption">Интервалы: номинальный уровень 90%, калибровка на 2020-2021 годах. При сдвиге распределения покрытие не гарантировано.</p></article></div>
+        <div class="kpi-grid" id="model-kpis"></div><details class="data-detail"><summary>Как читать результаты модели</summary><div id="forecast-help"></div><p>Валидация — годы для выбора модели; тест — отдельные будущие годы для проверки. Интервал — диапазон прогноза, а не гарантия результата.</p></details><div class="chart-grid"><article class="card"><h2>Сильная база: значение прошлого года</h2><p class="chart-caption">MAE - средняя абсолютная ошибка на 100 000. Меньше лучше. Выбор модели опирается только на временную валидацию.</p><div class="table-wrap"><table><thead><tr><th>Модель</th><th>Валидация</th><th>Тест</th><th>Покрытие</th></tr></thead><tbody id="model-table"></tbody></table></div></article><article class="card"><h2 id="prediction-country"></h2><div id="predictions"></div><p class="chart-caption">Интервалы: номинальный уровень 90%, калибровка на 2020-2021 годах. При сдвиге распределения покрытие не гарантировано.</p></article></div>
       </section>
 
       <section id="data" class="view" aria-label="Данные и метод" hidden>
-        <div class="method-grid source-cards"><article class="card"><p class="eyebrow">01 / ИСХОД</p><h2>ОЭСР</h2><p>Смертность до 75 лет. Возрастная стандартизация по населению ОЭСР 2015 года. Оба пола.</p><a href="https://www.oecd.org/en/data/datasets/oecd-health-statistics.html" target="_blank" rel="noopener">Health Statistics ↗</a></article><article class="card"><p class="eyebrow">02 / ФИНАНСИРОВАНИЕ</p><h2>ВОЗ</h2><p>Расходы и структура финансирования из GHED. Данные получены через World Bank WDI.</p><a href="https://apps.who.int/nha/database/" target="_blank" rel="noopener">Global Health Expenditure ↗</a></article><article class="card"><p class="eyebrow">03 / КОНТЕКСТ</p><h2>Всемирный банк</h2><p>ВВП по ППС, возраст населения, урбанизация и ожидаемая продолжительность жизни.</p><a href="https://data.worldbank.org/" target="_blank" rel="noopener">World Development Indicators ↗</a></article></div>
-        <article class="card"><div class="card-heading"><div><p class="eyebrow">ПРОВЕРЯЕМЫЙ СРЕЗ</p><h2>Таблица наблюдений</h2></div><label class="search-label">Поиск страны<input id="search" type="search" placeholder="Название или ISO-код"></label></div><p id="quality-note" class="chart-caption"></p><div class="table-wrap"><table><thead><tr><th>Страна</th><th>Год</th><th>Расходы, $ ППС</th><th id="table-outcome">Смертность</th><th>ВВП, $ ППС 2021</th><th>Возраст 65+, %</th></tr></thead><tbody id="data-table"></tbody></table></div><p class="chart-caption">Расходы: текущие цены. ВВП: постоянные цены 2021 года. Пустые значения показаны явно. Сводки дают каждой стране одинаковый вес.</p></article>
+        <div class="method-grid source-cards"><article class="card"><h2>ОЭСР</h2><p>Смертность до 75 лет. Возрастная стандартизация по населению ОЭСР 2015 года. Оба пола.</p><a href="https://www.oecd.org/en/data/datasets/oecd-health-statistics.html" target="_blank" rel="noopener">Health Statistics ↗</a></article><article class="card"><h2>ВОЗ</h2><p>Расходы и структура финансирования из GHED. Данные получены через World Bank WDI.</p><a href="https://apps.who.int/nha/database/" target="_blank" rel="noopener">Global Health Expenditure ↗</a></article><article class="card"><h2>Всемирный банк</h2><p>ВВП по ППС, возраст населения, урбанизация и ожидаемая продолжительность жизни.</p><a href="https://data.worldbank.org/" target="_blank" rel="noopener">World Development Indicators ↗</a></article></div>
+        <article class="card"><div class="card-heading"><div><h2>Таблица наблюдений</h2></div><label class="search-label">Поиск страны<input id="search" type="search" placeholder="Название или ISO-код"></label></div><p id="quality-note" class="chart-caption"></p><details class="data-detail"><summary>Что означают столбцы?</summary><p>ППС учитывает разницу цен между странами. ВВП на человека — размер экономики на одного жителя, не его зарплата; здесь он в сопоставимых ценах 2021 года. Возраст 65+ — процент жителей от 65 лет. «Нет данных» означает пропуск, а не нулевое значение.</p></details><div class="table-wrap"><table><thead><tr><th>Страна</th><th>Год</th><th>Расходы, $ ППС</th><th id="table-outcome">Смертность</th><th>ВВП, $ ППС 2021</th><th>Возраст 65+, %</th></tr></thead><tbody id="data-table"></tbody></table></div><p class="chart-caption">Расходы: текущие цены. ВВП: постоянные цены 2021 года. Пустые значения показаны явно. Сводки дают каждой стране одинаковый вес.</p></article>
       </section>
       </div></div>
-      <footer><span>HealthValue Atlas · Воспроизводимое исследование</span><span id="snapshot-date"></span><a href="https://github.com/morenoler/healthvalue-atlas/tree/main/reports" target="_blank" rel="noopener">Аналитический отчёт ↗</a></footer>
+      <footer><span>HealthValue Atlas</span><span id="snapshot-date"></span><a href="https://github.com/morenoler/healthvalue-atlas/tree/main/reports" target="_blank" rel="noopener">Аналитический отчёт ↗</a></footer>
     </div>
   </main>
   <div id="tooltip" role="tooltip" hidden></div>
@@ -1715,6 +310,11 @@ const colors = {
   orange: "#285ed6",
   muted: "#a8b9d2",
   navy: "#252c37"
+};
+const metricMeaning = {
+  treatable: "Смерти до 75 лет, предотвратимые своевременным лечением.",
+  preventable: "Смерти до 75 лет, предотвратимые профилактикой.",
+  avoidable: "Смерти до 75 лет, предотвратимые лечением или профилактикой."
 };
 const names = {
   treatable: "Смертность: своевременное лечение",
@@ -1780,7 +380,6 @@ function setView(view) {
     data: ["Данные и методология", "Источники, пропуски и определения. Каждое число можно проверить и скачать."]
   };
   $("page-title").innerHTML = titles[view][0];
-  $("page-description").textContent = titles[view][1];
   $("metric").disabled = ["research", "forecast"].includes(view);
   $("year").disabled = view === "forecast";
   $("metric").closest("label").hidden = ["research", "forecast"].includes(view);
@@ -1800,32 +399,36 @@ function renderOverview() {
     : Math.abs(gap) < 0.05
       ? "Смертность на уровне медианы выборки"
       : `Смертность на <strong>${fmt(Math.abs(gap), 1)}%</strong> ${gap > 0 ? "выше" : "ниже"} медианы выборки`;
+  const comparisonHelp = gap == null
+    ? "Для расчёта нужны смертность выбранной страны и ненулевая медиана. Нет данных — не означает ноль."
+    : `${esc(r.country)}: ${fmt(r[state.metric], 1)} на 100 тыс.; медиана: ${fmt(medRate, 1)}. Разница: (${fmt(r[state.metric], 1)} / ${fmt(medRate, 1)} − 1) × 100 = ${gap > 0 ? "+" : ""}${fmt(gap, 1)}%. Это сравнение стран за один год, а не изменение со временем. Расчёт выполнен до округления.`;
   $("kpis").innerHTML = `
-    <div class="summary-context"><span>Медианы выборки · ${state.year}</span><span>${rows.length} из ${atlas.quality.countries} стран · есть оба показателя</span></div>
+    <div class="summary-context"><span>Медианы выборки · ${state.year}</span><span>${rows.length} из ${atlas.quality.countries} стран</span></div>
     <div class="summary-values">
-      <div class="summary-metric"><span class="summary-label">Расходы на человека</span><div class="summary-number">${fmt(medSpend)} <span>$ ППС</span></div><small>В текущих ценах</small></div>
-      <div class="summary-metric"><span class="summary-label">Смертность</span><div class="summary-number">${fmt(medRate, 1)} <span>на 100 тыс.</span></div><small>С учётом возрастной структуры</small></div>
+      <div class="summary-metric"><span class="summary-label">Расходы на человека</span><div class="summary-number">${fmt(medSpend)} <span>$ ППС</span></div><small class="metric-explanation">Расходы на здоровье с поправкой на разницу цен между странами.</small></div>
+      <div class="summary-metric"><span class="summary-label">Смертность</span><div class="summary-number">${fmt(medRate, 1)} <span>на 100 тыс.</span></div><small class="metric-explanation">${metricMeaning[state.metric]}</small></div>
     </div>
-    <div class="summary-comparison"><span class="summary-country">${esc(r.country)}</span><span>${comparison}</span></div>`;
+    <details class="data-detail"><summary>Что значит медиана?</summary><p>Середина выборки: у половины стран показатель ниже, у половины — выше. Расходы даны в текущих ценах; смертность скорректирована по возрасту.</p><p>${rows.length} из ${atlas.quality.countries} стран — столько имеют одновременно данные о расходах и выбранной смертности за ${state.year} год. Остальные не входят в эти медианы.</p><p>Смертность — стандартизованный показатель для сравнения стран с разным возрастным составом, а не фактическое число умерших.</p></details>
+    <div class="summary-comparison"><span class="summary-country">${esc(r.country)}</span><span>${comparison}</span><details class="data-detail"><summary>Как получено это число?</summary><p>${comparisonHelp}</p></details></div>`;
   $("scatter-year").textContent = state.year;
   $("map-label").hidden = state.chart !== "map";
   if (state.chart === "map") renderMap();
   else {
-    $("scatter-caption").textContent = "Каждая точка - страна. Нажмите на точку, чтобы открыть её профиль.";
+    $("scatter-caption").textContent = "Каждая точка — страна.";
     $("scatter-legend").innerHTML = '<span><b class="legend-dot teal"></b>Выборка</span><span><b class="legend-dot orange"></b>Выбранная страна</span><span>Текущие $ по ППС · логарифмическая шкала</span>';
     renderScatter(rows);
   }
   $("profile-name").textContent = r.country;
   $("profile-code").textContent = r.iso3;
   $("profile-stats").innerHTML = [
-    ["Расходы на человека", r.spend_ppp, 0, " $ ППС"],
-    ["Смертность на 100 000", r[state.metric], 1, ""],
-    ["Прямые платежи граждан", r.oop_share, 1, "%"],
-    ["Доля населения 65+", r.age65_pct, 1, "%"]
-  ].map(([label, v, d, u]) => `<div class="stat-row"><span>${label}</span><b>${fmt(v,d)}${v==null?"":u}</b></div>`).join("");
+    ["Расходы на человека", r.spend_ppp, 0, " $ ППС", "В год, с поправкой на разницу цен"],
+    ["Смертность на 100 000", r[state.metric], 1, "", "Выбранная категория, с учётом возраста"],
+    ["Прямые платежи граждан", r.oop_share, 1, "%", r.oop_share == null ? "Доля расходов, оплаченная из своего кармана; данных нет" : `Из каждых 100 денежных единиц расходов на здоровье ${fmt(r.oop_share, 1)} оплачены напрямую гражданами`],
+    ["Доля населения 65+", r.age65_pct, 1, "%", r.age65_pct == null ? "Жители в возрасте 65 лет и старше; данных нет" : `Примерно ${fmt(r.age65_pct, 1)} из 100 жителей — в возрасте 65 лет и старше`]
+  ].map(([label, v, d, u, meaning]) => `<div class="stat-row"><span>${label}<small class="metric-explanation">${meaning}</small></span><b>${fmt(v,d)}${v==null?"":u}</b></div>`).join("");
   renderTrend();
   renderPeers();
-  $("insight").textContent = `В срезе за 2023 год корреляция расходов и смертности из категории «лечение» равна ${fmt(atlas.findings.spearman_spend_mortality,2)}. Это связь между странами. Панельная модель проверяет, как вывод меняется после учёта дохода, демографии и постоянных различий.`;
+  $("insight").textContent = `В срезе за 2023 год корреляция расходов и смертности из категории «лечение» равна ${fmt(atlas.findings.spearman_spend_mortality,2)}. Коэффициент от −1 до +1: минус означает, что большие расходы связаны с меньшей смертностью; близость к −1 — более сильную обратную связь. Это не доказательство причинности. Панельная модель проверяет, как вывод меняется после учёта дохода, демографии и постоянных различий.`;
 }
 
 function renderScatter(rows) {
@@ -1846,7 +449,7 @@ function renderScatter(rows) {
   const ymax = Math.ceil(Math.max(...rows.map(r => r[state.metric])) / 50) * 50;
   const x = v => m.l + (Math.log10(v) - xMin) / (xMax - xMin) * (w - m.l - m.r),
     y = v => h - m.b - v / ymax * (h - m.t - m.b);
-  let body = `<text x="${m.l}" y="12" class="svg-title">Смертность на 100 000 · ниже лучше</text>`;
+  let body = `<text x="${m.l}" y="12" class="svg-title">Смертность на 100 000 · меньше лучше</text>`;
   for (let i = 0; i <= 4; i++) {
     const v = ymax * i / 4;
     body += `<line x1="${m.l}" y1="${y(v)}" x2="${w-m.r}" y2="${y(v)}" class="svg-grid"/><text x="${m.l-10}" y="${y(v)+4}" text-anchor="end" class="svg-label">${fmt(v)}</text>`;
@@ -1910,7 +513,7 @@ function renderMap() {
     const polygons = feature.geometry.type === "Polygon" ? [feature.geometry.coordinates] : feature.geometry.coordinates;
     const path = polygons.map(p => p.map(ring => `M${ring.map(project).join("L")}Z`).join("")).join("");
     const title = row ? `${row.country}: ${fmt(row[column],1)} ${unit}` : `${feature.name}: вне выборки`;
-    body += `<path d="${path}" fill="${color(row?.[column])}" fill-rule="evenodd" stroke="${selected?colors.navy:"#fff"}" stroke-width="${selected?1.8:.5}" ${row?`class="map-country" role="button" tabindex="0" data-country="${row.iso3}" aria-label="${esc(title)}"`:""}><title>${esc(title)}</title></path>`;
+    body += `<path d="${path}" fill="${color(row?.[column])}" fill-rule="evenodd" stroke="${selected?colors.navy:"#fff"}" stroke-width="${selected?.8:.15}" ${row?`class="map-country" role="button" tabindex="0" data-country="${row.iso3}" aria-label="${esc(title)}"`:""}><title>${esc(title)}</title></path>`;
   }
   body += '<text x="15" y="319" class="svg-small">Границы: Natural Earth · страны вне выборки показаны серым</text>';
   $("scatter").innerHTML = svg(620, 330, body, `Карта: ${column==="spend_ppp"?"расходы":names[state.metric]}, ${state.year}`);
@@ -2022,29 +625,32 @@ function renderResearch() {
   $("change-label").textContent = `${change>0?"+":""}${change}%`;
   const row = current();
   $("scenario-result").innerHTML = `<div class="scenario-number">${effect>0?"+":""}${fmt(effect,2)}%</div><p class="scenario-detail">Связанное изменение смертности<br>95% ДИ: ${fmt(ci[0],2)}% - ${fmt(ci[1],2)}%</p><p class="scenario-baseline">${esc(row.country)}, ${state.year}<br>${row.treatable!=null?`Точка отсчёта: ${fmt(row.treatable,1)} → ${fmt(row.treatable*(1+effect/100),1)} на 100 000`:"Для точки отсчёта нет данных о смертности."}</p>`;
+  $("scenario-help").textContent = `Расходы ${change > 0 ? "+" : ""}${change}% — изменение относительно выбранного года. По модели с ним связано изменение смертности ${effect > 0 ? "+" : ""}${fmt(effect, 2)}%: минус означает снижение, плюс — рост. 95% ДИ от ${fmt(ci[0], 2)}% до ${fmt(ci[1], 2)}% показывает неопределённость оценки.${ci[0] <= 0 && ci[1] >= 0 ? " Интервал включает ноль: данные совместимы с отсутствием изменения." : ""} Это относительное изменение показателя, а не процентные пункты и не доказанный эффект бюджета.`;
+
 }
 
 function renderForecast() {
   const f = atlas.forecast,
     selected = f.metrics.find(r => r.selected),
     base = f.metrics.find(r => r.model === "Persistence");
-  $("model-kpis").innerHTML = kpi("Выбор по валидации", esc(f.selected_model), `${f.train_n} строк обучения`) + kpi("MAE на тесте", fmt(selected.test_mae, 2), `${f.test_n} наблюдений · 2022-2023`) + kpi("Изменение MAE к базе", `${fmt((selected.test_mae/base.test_mae-1)*100,1)}%`, "Отрицательное значение - лучше") + kpi("Покрытие интервала", `${fmt(selected.interval_coverage*100,1)}%`, "Номинальный уровень: 90%");
+  $("model-kpis").innerHTML = kpi("Выбор по валидации", esc(f.selected_model), "Модель с наименьшей ошибкой на валидации") + kpi("MAE на тесте", fmt(selected.test_mae, 2), "Средняя ошибка на 100 тыс. · меньше лучше") + kpi("Изменение MAE к базе", `${fmt((selected.test_mae/base.test_mae-1)*100,1)}%`, "К прогнозу по прошлому году · минус лучше") + kpi("Покрытие интервала", `${fmt(selected.interval_coverage*100,1)}%`, "Доля фактов внутри интервала · цель 90%");
+  const relativeError = (selected.test_mae / base.test_mae - 1) * 100;
+  $("forecast-help").innerHTML = `<p><b>MAE ${fmt(selected.test_mae, 2)}:</b> среднее абсолютное отклонение прогноза от факта — ${fmt(selected.test_mae, 2)} смерти на 100 тыс. Это не проценты.</p><p><b>${fmt(relativeError, 1)}% к базе:</b> ошибка модели ${fmt(selected.test_mae, 2)} против ${fmt(base.test_mae, 2)} у прогноза по прошлому году. Отрицательный процент означает снижение ошибки.</p><p><b>Покрытие ${fmt(selected.interval_coverage * 100, 1)}%:</b> доля фактических значений, попавших в прогнозные интервалы. Цель — 90%; высокое покрытие может быть следствием широких интервалов.</p>`;
   $("model-table").innerHTML = f.metrics.map(r => `<tr class="${r.selected?"selected":""}"><td>${esc(r.model)}${r.selected?'<span class="model-tag">ВЫБРАНА ПО ВАЛИДАЦИИ</span>':""}</td><td>${fmt(r.validation_mae,2)}</td><td>${fmt(r.test_mae,2)}</td><td>${fmt(r.interval_coverage*100,1)}%</td></tr>`).join("");
   $("prediction-country").textContent = current().country;
   const predictions = atlas.predictions.filter(r => r.iso3 === state.country);
-  $("predictions").innerHTML = predictions.length ? predictions.map(r => `<div class="prediction-row"><span>${r.year} ГОД</span><div class="prediction-values"><b>${fmt(r.actual,1)}<small>Факт</small></b><b>${fmt(r.predicted,1)}<small>Прогноз</small></b></div><small>Интервал: ${fmt(r.lower,1)} - ${fmt(r.upper,1)} на 100 000</small></div>`).join("") : '<p class="empty">Для этой страны нет полных тестовых наблюдений.</p>';
+  $("predictions").innerHTML = predictions.length ? predictions.map(r => `<div class="prediction-row"><span>${r.year} ГОД</span><div class="prediction-values"><b>${fmt(r.actual,1)}<small>Факт · на 100 тыс.</small></b><b>${fmt(r.predicted,1)}<small>Прогноз · на 100 тыс.</small></b></div><small>Интервал: ${fmt(r.lower,1)} - ${fmt(r.upper,1)} на 100 000</small></div>`).join("") : '<p class="empty">Для этой страны нет полных тестовых наблюдений.</p>';
 }
 
 function renderData() {
   const query = $("search").value.toLowerCase().trim();
   const rows = yearRows().filter(r => `${r.country} ${r.iso3}`.toLowerCase().includes(query)).sort((a, b) => a.country.localeCompare(b.country));
   $("data-table").innerHTML = rows.length ? rows.map(r => `<tr class="${r.iso3===state.country?"selected":""}"><td>${esc(r.country)} <small>${r.iso3}</small></td><td>${r.year}</td><td>${fmt(r.spend_ppp)}</td><td>${fmt(r[state.metric],1)}</td><td>${fmt(r.gdp_ppp_constant)}</td><td>${fmt(r.age65_pct,1)}</td></tr>`).join("") : '<tr><td colspan="6">Страна не найдена</td></tr>';
-  $("table-outcome").textContent = state.metric === "treatable" ? "Лечение, на 100 тыс." : state.metric === "preventable" ? "Профилактика, на 100 тыс." : "Все причины, на 100 тыс.";
+  $("table-outcome").textContent = state.metric === "treatable" ? "Лечение, на 100 тыс." : state.metric === "preventable" ? "Профилактика, на 100 тыс." : "Предотвратимая, на 100 тыс.";
   $("quality-note").textContent = `${rows.length} стран за ${state.year} год. Во всём срезе: ${atlas.quality.mortality_rows} строк с исходом из ${atlas.quality.grid_rows}. SHA-256 всех ${atlas.quality.source_files} исходных файлов проверены при сборке.`;
 }
 
 function render() {
-  $("filter-note").textContent = state.view === "research" ? "Исход модели: лечение" : state.view === "forecast" ? "Тест: 2022-2023" : "Один год для всех стран";
   if (state.view === "overview") renderOverview();
   if (state.view === "research") renderResearch();
   if (state.view === "forecast") renderForecast();
@@ -2105,7 +711,6 @@ async function boot() {
       });
     }));
     window.addEventListener("hashchange", () => setView(location.hash.slice(1)));
-    $("edition-count").textContent = `${atlas.quality.countries} стран · 14 лет наблюдений`;
     const dates = atlas.sources.map(s => s.retrieved_at_utc.slice(0, 10)).sort();
     $("snapshot-date").textContent = `Срез загружен: ${dates.at(-1)} · данные до 2023`;
     $("application").hidden = false;
