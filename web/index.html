@@ -27,8 +27,15 @@
     <div id="loading" role="status" class="notice">Загрузка исследовательского среза…</div>
     <div id="application" hidden>
       <div class="analysis-workspace">
-<aside class="analysis-controls" aria-label="Настройки и профиль"><section class="filters" aria-label="Настройки анализа"><label>Страна<select id="country"></select></label><label>Год<select id="year"></select></label><label class="metric-filter">Показатель<select id="metric"><option value="treatable">Смертность: своевременное лечение</option><option value="preventable">Смертность: профилактика</option><option value="avoidable">Вся предотвратимая смертность</option></select></label><span class="filter-note" id="filter-note"></span></section>
-<div id="country-dock"></div></aside>
+<aside class="analysis-controls" aria-label="Настройки анализа">
+  <div class="controls-heading"><h2>Настройки среза</h2><p>Изменения применяются сразу</p></div>
+  <section class="filters" aria-label="Фильтры данных">
+    <label class="filter-field">Страна<select id="country"></select><span class="field-help">Выделена на графике синим</span></label>
+    <label class="filter-field">Год наблюдения<select id="year"></select></label>
+    <label class="filter-field metric-filter">Категория смертности<select id="metric"><option value="treatable">Своевременное лечение</option><option value="preventable">Профилактика</option><option value="avoidable">Вся предотвратимая</option></select><span class="field-help">На 100 000 человек, с учётом возраста</span></label>
+    <p class="filter-note" id="filter-note"></p>
+  </section>
+</aside>
 <div class="analysis-content">
 
       <section id="overview" class="view active" aria-label="Обзор стран">
@@ -38,9 +45,10 @@
             <article class="card scatter-card"><div class="card-heading"><div><h2>Сравнение стран</h2></div><span class="pill" id="scatter-year"></span></div><div class="chart-controls"><div class="segmented" aria-label="Вид графика"><button data-chart="scatter" class="active" aria-pressed="true">Связь</button><button data-chart="map" aria-pressed="false">Карта</button></div><label id="map-label" hidden>Цвет карты<select id="map-variable"><option value="mortality">Смертность</option><option value="spend_ppp">Расходы</option></select></label></div><p class="chart-caption" id="scatter-caption">Каждая точка - страна. Нажмите на точку, чтобы открыть её профиль.</p><div id="scatter" class="chart"></div><div class="chart-footer" id="scatter-legend"></div></article>
 
             <article class="insight-card"><h2>Как читать эту связь</h2><p id="insight"></p><button class="text-button" data-jump="research">Проверить связь с учётом других факторов <span>↗</span></button></article>
+            <div id="country-dock"></div>
           </div>
           <aside class="country-panel" aria-label="Страна и её ближайшие аналоги">
-            <article class="card profile-card"><div class="card-heading"><div><p class="eyebrow">ВЫБРАННАЯ СТРАНА</p><h2 id="profile-name"></h2></div><span class="country-code" id="profile-code"></span></div><div id="profile-stats"></div><h3>Смертность по годам</h3><div id="trend" class="chart small-chart"></div><p class="chart-caption">На 100 000, с учётом возраста. Пропуски разрывают линию.</p></article>
+            <article class="card profile-card"><div class="card-heading"><div><p class="eyebrow">Профиль страны</p><h2 id="profile-name"></h2></div><span class="country-code" id="profile-code"></span></div><div id="profile-stats"></div><h3>Смертность по годам</h3><div id="trend" class="chart small-chart"></div><p class="chart-caption">На 100 000, с учётом возраста. Пропуски разрывают линию.</p></article>
             <article class="card peers-card"><div class="card-heading"><div><h2>Ближайшие страны</h2></div></div><p class="chart-caption">Близость по логарифму реального ВВП на человека и доле населения 65+. Оба признака стандартизованы в выбранном году.</p><div id="peers"></div></article>
           </aside>
         </div>

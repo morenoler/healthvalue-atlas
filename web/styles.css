@@ -1586,3 +1586,38 @@ footer { border-color: #b3b7be; color: #5f636a; }
 .legend-dot.teal { background: #7188ac; }
 .legend-dot.orange { background: #285ed6; }
 .peer.selected .bar-track i { background: #285ed6; }
+
+/* Data-explorer controls: plain sections separate inputs from results. */
+.analysis-workspace { grid-template-columns: 236px minmax(0, 1fr); gap: 30px; }
+.analysis-controls { background: transparent; border: 0; border-right: 1px solid #b7c1ce; border-radius: 0; padding: 0 24px 24px 0; }
+.controls-heading { padding: 1px 0 20px; border-bottom: 2px solid #43536a; }
+.controls-heading h2 { font-size: 16px; font-weight: 600; letter-spacing: -.3px; margin: 0 0 5px; }
+.controls-heading p { color: #556171; font-size: 11px; line-height: 1.5; margin: 0; }
+.analysis-controls .filters { display: block; padding: 0; background: transparent; border: 0; border-radius: 0; margin: 0; }
+.filters .filter-field, .filters > .filter-field:first-child, .filters .metric-filter { display: block; padding: 18px 0; border-bottom: 1px solid #b7c1ce; font-size: 12px; font-weight: 600; color: #344155; }
+.filters select, .filters .metric-filter select, #country, #year { width: 100%; min-width: 0; margin-top: 9px; border: 1px solid #9baabd; border-radius: 5px; background: #f2f5f9; color: #252c37; font-size: 12px; font-weight: 400; padding: 9px 24px 9px 10px; min-height: 38px; }
+.filters select:hover { border-color: #285ed6; }
+.field-help { display: block; margin-top: 8px; font-size: 10px; font-weight: 400; color: #58677b; line-height: 1.6; }
+.filters .filter-note { padding: 14px 0 0; margin: 0; font-size: 10px; color: #58677b; line-height: 1.6; }
+#country-dock { margin-top: 30px; }
+#country-dock .country-panel { display: grid; grid-template-columns: minmax(0,1.15fr) minmax(0,1fr); gap: 32px; padding: 26px 0 0; margin: 0; border: 0; border-top: 1px solid #aebaca; border-radius: 0; background: transparent; }
+#country-dock .profile-card, #country-dock .peers-card { margin: 0; padding: 0; border: 0; background: transparent; }
+#country-dock .peers-card { border-left: 1px solid #b7c1ce; padding-left: 28px; }
+#country-dock .profile-card .eyebrow { font-size: 11px; text-transform: none; letter-spacing: 0; font-weight: 400; }
+#country-dock .profile-card h2 { font-size: 23px; }
+#country-dock .country-code { border: 0; border-radius: 0; background: transparent; padding: 0; color: #5b6980; font-size: 11px; }
+#country-dock .stat-row { font-size: 12px; padding: 11px 0; }
+#country-dock .peers-card h2 { font-size: 18px; }
+#country-dock .peer { grid-template-columns: 100px minmax(0,1fr) 36px; }
+@media(max-width:1150px) { .analysis-workspace { grid-template-columns: 210px minmax(0,1fr); gap: 24px; } .analysis-controls { padding-right: 20px; } #country-dock .country-panel { gap: 24px; } #country-dock .peers-card { padding-left: 22px; } }
+@media(max-width:900px) { #country-dock .country-panel { grid-template-columns: 1fr; } #country-dock .peers-card { padding: 22px 0 0; border-left: 0; border-top: 1px solid #b7c1ce; } }
+@media(max-width:700px) {
+  .analysis-controls { display: block; width: 100%; padding: 0 0 20px; border: 0; }
+  .controls-heading { padding-bottom: 12px; }
+  .controls-heading p { display: none; }
+  .analysis-controls .filters { display: grid; grid-template-columns: minmax(0,1fr) 110px; column-gap: 18px; width: 100%; }
+  .filters .filter-field, .filters > .filter-field:first-child, .filters .metric-filter { padding: 14px 0; }
+  .filters .metric-filter { grid-column: 1 / -1; }
+  .filters .filter-note { grid-column: 1 / -1; padding-top: 0; }
+  #country-dock .country-panel { padding-top: 22px; }
+}
