@@ -11,33 +11,39 @@
 </head>
 <body>
   <a class="skip" href="#content">Перейти к содержанию</a>
-  <aside class="sidebar">
-    <a class="brand" href="#overview" aria-label="HealthValue Atlas, обзор"><span class="brand-icon">h<span>v</span></span><span>HEALTHVALUE<small>ATLAS / RESEARCH LAB</small></span></a>
-    <div class="rail-label">ЭКОНОМИКА ЗДОРОВЬЯ</div>
+  <header class="site-header">
+    <a class="wordmark" href="#overview" aria-label="HealthValue Atlas, обзор">HealthValue<span>Atlas</span></a>
     <nav aria-label="Разделы исследования">
-      <button class="nav-item active" data-view="overview"><span>01</span> Обзор стран <i>↗</i></button>
-      <button class="nav-item" data-view="research"><span>02</span> Связь и сценарии <i>↗</i></button>
-      <button class="nav-item" data-view="forecast"><span>03</span> Проверка прогноза <i>↗</i></button>
-      <button class="nav-item" data-view="data"><span>04</span> Данные и метод <i>↗</i></button>
+      <button class="nav-item active" data-view="overview">Обзор стран</button>
+      <button class="nav-item" data-view="research">Связь и сценарии</button>
+      <button class="nav-item" data-view="forecast">Проверка прогноза</button>
+      <button class="nav-item" data-view="data">Данные и метод</button>
     </nav>
-    <div class="rail-note"><span class="status-dot"></span> Открытые данные<p>Наблюдения за 2010-2023 годы.<br>ОЭСР · ВОЗ · Всемирный банк</p></div>
-    <div class="rail-bottom"><div class="mini-bars"><b></b><b></b><b></b><b></b><b></b><b></b><b></b></div><p>За каждым показателем<br>стоит исследовательский вопрос.</p><a href="https://github.com/morenoler/healthvalue-atlas" target="_blank" rel="noopener">Код и исследование ↗</a></div>
-  </aside>
+    <a class="download-link" href="data/panel.csv" download>Скачать CSV <span aria-hidden="true">↓</span></a>
+  </header>
 
   <main id="content">
-    <div class="topline"><span>PUBLIC HEALTH / DATA SCIENCE</span><a href="data/panel.csv" download>↓ Скачать данные</a></div>
-    <header class="page-header"><div><p class="eyebrow">HEALTHVALUE ATLAS</p><h1 id="page-title">Цена здоровья.<br><span>Результат лечения.</span></h1><p id="page-description" class="intro">Как страны превращают расходы на здравоохранение в результаты. Исследуйте данные и проверьте выводы.</p></div><div class="edition"><span>RESEARCH EDITION</span><strong>2010<span> - </span>2023</strong><small id="edition-count">Официальная статистика</small></div></header>
+    <header class="page-header"><div><p class="eyebrow">ЭКОНОМИКА ЗДРАВООХРАНЕНИЯ</p><h1 id="page-title">Здравоохранение в цифрах</h1><p id="page-description" class="intro">Расходы, смертность и различия между странами на открытых данных ОЭСР, ВОЗ и Всемирного банка.</p></div><div class="edition"><span>ПЕРИОД ИССЛЕДОВАНИЯ</span><strong>2010<span> - </span>2023</strong><small id="edition-count">Официальная статистика</small></div></header>
     <div id="loading" role="status" class="notice">Загрузка исследовательского среза…</div>
     <div id="application" hidden>
-      <section class="filters" aria-label="Настройки анализа"><label>Страна<select id="country"></select></label><label>Год<select id="year"></select></label><label class="metric-filter">Показатель<select id="metric"><option value="treatable">Смертность: своевременное лечение</option><option value="preventable">Смертность: профилактика</option><option value="avoidable">Вся предотвратимая смертность</option></select></label><span class="filter-note" id="filter-note"></span></section>
+      <div class="analysis-workspace">
+<aside class="analysis-controls" aria-label="Настройки и профиль"><section class="filters" aria-label="Настройки анализа"><label>Страна<select id="country"></select></label><label>Год<select id="year"></select></label><label class="metric-filter">Показатель<select id="metric"><option value="treatable">Смертность: своевременное лечение</option><option value="preventable">Смертность: профилактика</option><option value="avoidable">Вся предотвратимая смертность</option></select></label><span class="filter-note" id="filter-note"></span></section>
+<div id="country-dock"></div></aside>
+<div class="analysis-content">
 
       <section id="overview" class="view active" aria-label="Обзор стран">
-        <div class="kpi-grid" id="kpis"></div>
-        <div class="chart-grid">
-          <article class="card scatter-card"><div class="card-heading"><div><p class="eyebrow">МЕЖДУ СТРАНАМИ</p><h2>Расходы и результат</h2></div><span class="pill" id="scatter-year"></span></div><div class="chart-controls"><div class="segmented" aria-label="Вид графика"><button data-chart="scatter" class="active" aria-pressed="true">Связь</button><button data-chart="map" aria-pressed="false">Карта</button></div><label id="map-label" hidden>Цвет карты<select id="map-variable"><option value="mortality">Смертность</option><option value="spend_ppp">Расходы</option></select></label></div><p class="chart-caption" id="scatter-caption">Каждая точка - страна. Нажмите на точку, чтобы открыть её профиль.</p><div id="scatter" class="chart"></div><div class="chart-footer" id="scatter-legend"></div></article>
-          <article class="card profile-card"><div class="card-heading"><div><p class="eyebrow">ПРОФИЛЬ СТРАНЫ</p><h2 id="profile-name"></h2></div><span class="country-code" id="profile-code"></span></div><div id="profile-stats"></div><h3>Смертность по годам</h3><div id="trend" class="chart small-chart"></div><p class="chart-caption">На 100 000, с учётом возраста. Пропуски разрывают линию.</p></article>
+        <div class="atlas-layout">
+          <div class="atlas-main">
+            <section class="summary-strip" aria-label="Сводка по выбранному году"><div id="kpis" aria-live="polite"></div></section>
+            <article class="card scatter-card"><div class="card-heading"><div><h2>Сравнение стран</h2></div><span class="pill" id="scatter-year"></span></div><div class="chart-controls"><div class="segmented" aria-label="Вид графика"><button data-chart="scatter" class="active" aria-pressed="true">Связь</button><button data-chart="map" aria-pressed="false">Карта</button></div><label id="map-label" hidden>Цвет карты<select id="map-variable"><option value="mortality">Смертность</option><option value="spend_ppp">Расходы</option></select></label></div><p class="chart-caption" id="scatter-caption">Каждая точка - страна. Нажмите на точку, чтобы открыть её профиль.</p><div id="scatter" class="chart"></div><div class="chart-footer" id="scatter-legend"></div></article>
+
+            <article class="insight-card"><h2>Как читать эту связь</h2><p id="insight"></p><button class="text-button" data-jump="research">Проверить связь с учётом других факторов <span>↗</span></button></article>
+          </div>
+          <aside class="country-panel" aria-label="Страна и её ближайшие аналоги">
+            <article class="card profile-card"><div class="card-heading"><div><p class="eyebrow">ВЫБРАННАЯ СТРАНА</p><h2 id="profile-name"></h2></div><span class="country-code" id="profile-code"></span></div><div id="profile-stats"></div><h3>Смертность по годам</h3><div id="trend" class="chart small-chart"></div><p class="chart-caption">На 100 000, с учётом возраста. Пропуски разрывают линию.</p></article>
+            <article class="card peers-card"><div class="card-heading"><div><h2>Ближайшие страны</h2></div></div><p class="chart-caption">Близость по логарифму реального ВВП на человека и доле населения 65+. Оба признака стандартизованы в выбранном году.</p><div id="peers"></div></article>
+          </aside>
         </div>
-        <div class="bottom-grid"><article class="card"><div class="card-heading"><div><p class="eyebrow">СОПОСТАВИМЫЕ УСЛОВИЯ</p><h2>Ближайшие страны</h2></div><span class="pill">5 соседей</span></div><p class="chart-caption">Близость по логарифму реального ВВП на человека и доле населения 65+. Оба признака стандартизованы в выбранном году.</p><div id="peers"></div></article><article class="insight-card"><p class="eyebrow">ВОПРОС К ДАННЫМ</p><h2>Больше расходов.<br>Меньше смертей?</h2><p id="insight"></p><button class="text-button" data-jump="research">Проверить связь с учётом других факторов <span>↗</span></button></article></div>
       </section>
 
       <section id="research" class="view" aria-label="Связь и сценарии" hidden>
@@ -57,6 +63,7 @@
         <div class="method-grid source-cards"><article class="card"><p class="eyebrow">01 / ИСХОД</p><h2>ОЭСР</h2><p>Смертность до 75 лет. Возрастная стандартизация по населению ОЭСР 2015 года. Оба пола.</p><a href="https://www.oecd.org/en/data/datasets/oecd-health-statistics.html" target="_blank" rel="noopener">Health Statistics ↗</a></article><article class="card"><p class="eyebrow">02 / ФИНАНСИРОВАНИЕ</p><h2>ВОЗ</h2><p>Расходы и структура финансирования из GHED. Данные получены через World Bank WDI.</p><a href="https://apps.who.int/nha/database/" target="_blank" rel="noopener">Global Health Expenditure ↗</a></article><article class="card"><p class="eyebrow">03 / КОНТЕКСТ</p><h2>Всемирный банк</h2><p>ВВП по ППС, возраст населения, урбанизация и ожидаемая продолжительность жизни.</p><a href="https://data.worldbank.org/" target="_blank" rel="noopener">World Development Indicators ↗</a></article></div>
         <article class="card"><div class="card-heading"><div><p class="eyebrow">ПРОВЕРЯЕМЫЙ СРЕЗ</p><h2>Таблица наблюдений</h2></div><label class="search-label">Поиск страны<input id="search" type="search" placeholder="Название или ISO-код"></label></div><p id="quality-note" class="chart-caption"></p><div class="table-wrap"><table><thead><tr><th>Страна</th><th>Год</th><th>Расходы, $ ППС</th><th id="table-outcome">Смертность</th><th>ВВП, $ ППС 2021</th><th>Возраст 65+, %</th></tr></thead><tbody id="data-table"></tbody></table></div><p class="chart-caption">Расходы: текущие цены. ВВП: постоянные цены 2021 года. Пустые значения показаны явно. Сводки дают каждой стране одинаковый вес.</p></article>
       </section>
+      </div></div>
       <footer><span>HealthValue Atlas · Воспроизводимое исследование</span><span id="snapshot-date"></span><a href="https://github.com/morenoler/healthvalue-atlas/tree/main/reports" target="_blank" rel="noopener">Аналитический отчёт ↗</a></footer>
     </div>
   </main>

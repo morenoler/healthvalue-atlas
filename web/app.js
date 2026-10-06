@@ -8,10 +8,10 @@ const state = {
   chart: "scatter"
 };
 const colors = {
-  teal: "#287f7e",
-  orange: "#cf784b",
-  muted: "#a7c1b8",
-  navy: "#172e3b"
+  teal: "#7188ac",
+  orange: "#285ed6",
+  muted: "#a8b9d2",
+  navy: "#252c37"
 };
 const names = {
   treatable: "Смертность: своевременное лечение",
@@ -55,6 +55,11 @@ function chooseCountry(code) {
 function setView(view) {
   if (!["overview", "research", "forecast", "data"].includes(view)) view = "overview";
   state.view = view;
+  const countryPanel = document.querySelector('.country-panel');
+  if (countryPanel) {
+    $('country-dock').append(countryPanel);
+    countryPanel.hidden = view !== 'overview';
+  }
   document.querySelectorAll(".view").forEach(el => {
     el.hidden = el.id !== view;
     el.classList.toggle("active", el.id === view);
@@ -66,10 +71,10 @@ function setView(view) {
     else el.removeAttribute("aria-current");
   });
   const titles = {
-    overview: ["Цена здоровья.<br><span>Результат лечения.</span>", "Как страны превращают расходы на здравоохранение в результаты. Исследуйте данные и проверьте выводы."],
-    research: ["За корреляцией.<br><span>Проверяем связь.</span>", "Эффекты стран и лет, устойчивость оценки и сценарий изменения расходов."],
-    forecast: ["Прогноз под проверкой.<br><span>Будущие годы - тест.</span>", "Сравнение моделей с простым прогнозом по прошлому году. Выбор модели по временной валидации."],
-    data: ["Открытые данные.<br><span>Прозрачный метод.</span>", "Источники, пропуски и определения. Каждое число можно проверить и скачать."]
+    overview: ["Здравоохранение в цифрах", "Расходы, смертность и различия между странами на открытых данных ОЭСР, ВОЗ и Всемирного банка."],
+    research: ["Расходы и смертность", "Эффекты стран и лет, устойчивость оценки и сценарий изменения расходов."],
+    forecast: ["Качество прогноза", "Сравнение моделей с простым прогнозом по прошлому году. Выбор модели по временной валидации."],
+    data: ["Данные и методология", "Источники, пропуски и определения. Каждое число можно проверить и скачать."]
   };
   $("page-title").innerHTML = titles[view][0];
   $("page-description").textContent = titles[view][1];
@@ -87,7 +92,18 @@ function renderOverview() {
     medRate = median(rows.map(r => r[state.metric])),
     medSpend = median(rows.map(r => r.spend_ppp));
   const gap = r?.[state.metric] != null && medRate ? (r[state.metric] / medRate - 1) * 100 : null;
-  $("kpis").innerHTML = kpi("Страны в сравнении", `${rows.length}<small> / ${atlas.quality.countries}</small>`, `${state.year} год · есть оба показателя`) + kpi("Медианные расходы", fmt(medSpend), "На человека · текущие цены", "$ ППС") + kpi("Медианная смертность", fmt(medRate, 1), "Стандартизация по возрасту", "/ 100 тыс.") + kpi("Страна к медиане смертности", gap == null ? "Нет данных" : `${gap>0?"+":""}${fmt(gap,1)}%`, esc(r.country));
+  const comparison = gap == null
+    ? "Нет данных для сравнения смертности с медианой"
+    : Math.abs(gap) < 0.05
+      ? "Смертность на уровне медианы выборки"
+      : `Смертность на <strong>${fmt(Math.abs(gap), 1)}%</strong> ${gap > 0 ? "выше" : "ниже"} медианы выборки`;
+  $("kpis").innerHTML = `
+    <div class="summary-context"><span>Медианы выборки · ${state.year}</span><span>${rows.length} из ${atlas.quality.countries} стран · есть оба показателя</span></div>
+    <div class="summary-values">
+      <div class="summary-metric"><span class="summary-label">Расходы на человека</span><div class="summary-number">${fmt(medSpend)} <span>$ ППС</span></div><small>В текущих ценах</small></div>
+      <div class="summary-metric"><span class="summary-label">Смертность</span><div class="summary-number">${fmt(medRate, 1)} <span>на 100 тыс.</span></div><small>С учётом возрастной структуры</small></div>
+    </div>
+    <div class="summary-comparison"><span class="summary-country">${esc(r.country)}</span><span>${comparison}</span></div>`;
   $("scatter-year").textContent = state.year;
   $("map-label").hidden = state.chart !== "map";
   if (state.chart === "map") renderMap();
@@ -178,12 +194,12 @@ function renderMap() {
     high = Math.max(...values);
   const unit = column === "spend_ppp" ? "$ ППС / человек" : "на 100 000";
   const color = v => {
-    if (v == null) return "#e4e9e5";
+    if (v == null) return "#d9dfe8";
     const t = (v - low) / (high - low || 1);
-    return `rgb(${Math.round(40+167*t)},${Math.round(127-7*t)},${Math.round(126-51*t)})`;
+    return `rgb(${Math.round(196-156*t)},${Math.round(214-128*t)},${Math.round(240-80*t)})`;
   };
   const project = ([lon, lat]) => `${(15+(lon+180)/360*590).toFixed(2)},${(27+(85-lat)/145*265).toFixed(2)}`;
-  let body = '<rect x="0" y="0" width="620" height="330" fill="#fafcf9" rx="8"/>';
+  let body = '<rect x="0" y="0" width="620" height="330" fill="#edf1f7" rx="8"/>';
   const sorted = world.slice().sort((a, b) => (a.iso3 === state.country) - (b.iso3 === state.country));
   for (const feature of sorted) {
     const row = rows.find(r => r.iso3 === feature.iso3),
